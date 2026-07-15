@@ -1,0 +1,100 @@
+* {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        body {
+            background: url('watermarked_img_9780776355970194250.png') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            z-index: 0;
+        }
+
+        /* Contenedor principal con efecto de cristal esmerilado unificado */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.93);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 
+                        inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(253, 213, 189, 0.4);
+            z-index: 1;
+        }
+
+        /* Estilo dulce del botón de miel */
+        .btn-honey {
+            background: linear-gradient(135deg, #ffca28, #ff9800);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn-honey:hover {
+            background: linear-gradient(135deg, #ffd54f, #fb8c00);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+            transform: scale(1.05);
+        }
+
+        /* Animación para las burbujas flotantes de letras */
+        @keyframes floatBubble {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .bubble-animation {
+            animation: floatBubble 4s ease-in-out infinite;
+        }
+
+        /* Animación de vibración por error */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        .animate-shake {
+            animation: shake 0.3s ease-in-out;
+        }
+
+        /* Animación de confeti de victoria */
+        @keyframes fall {
+            0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .confetti-piece {
+            position: absolute;
+            animation: fall 3s linear infinite;
+            z-index: 50;
+        }
+
+        /* Pulsación del botón de victoria */
+        .pulse-btn {
+            animation: pulseBright 2s infinite alternate;
+        }
+
+        @keyframes pulseBright {
+            0% { box-shadow: 0 0 10px rgba(255,152,0,0.4); }
+            100% { box-shadow: 0 0 25px rgba(255,152,0,0.8); transform: scale(1.03); }
+        }

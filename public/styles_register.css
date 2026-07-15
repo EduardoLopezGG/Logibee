@@ -1,0 +1,211 @@
+* {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            /* Usamos la imagen de la abejita amigable que seleccionamos */
+            background: url('../IMG/Logibee_background.png') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Capa suave para mejorar el contraste sin tapar la ilustración */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 0;
+        }
+
+        .register-container {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 
+                        inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+            width: 100%;
+            max-width: 450px;
+            z-index: 1;
+            border: 1px solid rgba(253, 213, 189, 0.4);
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 25px;
+        }
+
+        /* Animación juguetona de flotación para el icono decorativo */
+        .header-icon {
+            font-size: 2.8rem;
+            color: #ffb300;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 2px 5px rgba(255, 179, 0, 0.3));
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(4deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        h2 {
+            color: #4a3319; /* Tono marrón dulce en vez de negro puro */
+            font-weight: 700;
+            font-size: 26px;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            color: #7c6248;
+            font-size: 14.5px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #4a3319;
+            font-weight: 600;
+            font-size: 13.5px;
+        }
+
+        /* Contenedores de inputs con iconos integrados */
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            color: #cca474;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 12px 15px 12px 42px;
+            border: 2px solid #e6dfd5;
+            border-radius: 14px;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.85);
+            color: #4a3319;
+        }
+
+        .input-wrapper input::placeholder {
+            color: #b5a28c;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #ffb300;
+            background-color: #fff;
+            box-shadow: 0 0 8px rgba(255, 179, 0, 0.2);
+        }
+
+        .input-wrapper input:focus + i {
+            color: #ffb300;
+        }
+
+        /* Checkbox amigable para términos y condiciones */
+        .terms-container {
+            display: flex;
+            align-items: flex-start;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .terms-container input[type="checkbox"] {
+            margin-top: 3px;
+            margin-right: 10px;
+            cursor: pointer;
+            accent-color: #ffb300;
+            width: 16px;
+            height: 16px;
+        }
+
+        .terms-container label {
+            font-size: 13px;
+            color: #7c6248;
+            line-height: 1.4;
+            cursor: pointer;
+        }
+
+        .terms-container a {
+            color: #ff9800;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .terms-container a:hover {
+            text-decoration: underline;
+        }
+
+        /* Botón con degradado miel */
+        .btn-register {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #ffca28, #ff9800);
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+        }
+
+        .btn-register:hover {
+            background: linear-gradient(135deg, #ffd54f, #fb8c00);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-register:active {
+            transform: translateY(1px);
+        }
+
+        /* Pie de página con enlace de retorno */
+        .footer {
+            margin-top: 25px;
+            font-size: 14px;
+            color: #7c6248;
+            border-top: 1px dashed #e6dfd5;
+            padding-top: 20px;
+        }
+
+        .footer a {
+            color: #ff9800;
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.2s;
+        }
+
+        .footer a:hover {
+            color: #e65100;
+            text-decoration: underline;
+        }

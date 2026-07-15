@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colmena de Letras - El Panal de la Abejita</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Tipografía infantil redondeada -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Iconos divertidos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../public/styles_letter_game.css">
+
+</head>
+<body>
+
+    <!-- Contenedor dinámico de confeti -->
+    <div id="confettiContainer" class="absolute inset-0 pointer-events-none overflow-hidden z-40 hidden"></div>
+
+    <main class="w-full max-w-2xl glass-panel rounded-[28px] p-6 sm:p-8 text-center relative flex flex-col justify-between min-h-[580px]">
+        
+        <!-- HEADER DEL JUEGO (Voz de maestra eliminada) -->
+        <header class="flex flex-col sm:flex-row items-center justify-between gap-3 pb-4 border-b-2 border-dashed border-amber-100 z-10">
+            <div class="flex items-center gap-2.5">
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center text-2xl bg-amber-100 shadow-sm border border-yellow-300">
+                    🔤
+                </div>
+                <div class="text-left">
+                    <p class="text-xs font-bold text-[#7c6248]">Misión del día</p>
+                    <h2 class="text-base font-black text-[#4a3319]">Colmena de Letras</h2>
+                </div>
+            </div>
+
+            <!-- Botón de Reinicio Rápido -->
+            <button onclick="resetGame()" class="px-4 py-2 rounded-xl border-2 border-[#e6dfd5] bg-white text-[#7c6248] hover:text-[#4a3319] hover:border-[#ffca28] font-bold text-xs transition-all flex items-center gap-1.5 active:scale-95">
+                <i class="fa-solid fa-rotate-right"></i> Reiniciar
+            </button>
+        </header>
+
+        <!-- ÁREA INTERACTIVA DE JUEGO -->
+        <section class="my-6 flex-grow flex flex-col justify-center items-center relative z-10">
+            <p class="text-lg sm:text-xl font-bold text-[#4a3319] mb-4">
+                ¿Qué letra falta para completar la palabra? 🍯
+            </p>
+            
+            <!-- Tablero de concepto con emoji gigante -->
+            <div class="w-full max-w-lg p-6 bg-gradient-to-b from-amber-50/40 to-yellow-50/40 border-2 border-amber-200 rounded-3xl relative flex flex-col items-center justify-center mb-6 shadow-inner">
+                <!-- Concepto de la palabra en emoji -->
+                <span id="conceptEmoji" class="text-7xl mb-4 drop-shadow-md select-none transition-transform duration-300 hover:scale-110">🍎</span>
+                
+                <!-- Palabra con espacio en blanco -->
+                <div id="wordDisplay" class="flex justify-center gap-3 mt-2 flex-wrap">
+                    <!-- Las letras de la palabra se generarán aquí con JS -->
+                </div>
+            </div>
+
+            <!-- Opciones de Burbujas de Letras (Grandes para dedos infantiles) -->
+            <div class="flex justify-center w-full max-w-md">
+                <div id="letterChoices" class="flex justify-center gap-3 sm:gap-4 flex-wrap w-full">
+                    <!-- Los botones de letras se generan con JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- BARRA DE PROGRESO Y COMENTARIOS -->
+        <footer class="mt-2 pt-4 border-t border-[#e6dfd5] flex flex-col items-center gap-3 relative z-10">
+            <div class="w-full max-w-xs flex items-center gap-2">
+                <span class="text-xs font-bold text-[#7c6248]">Progreso:</span>
+                <div class="flex-grow bg-[#e6dfd5] h-3.5 rounded-full overflow-hidden p-[2px]">
+                    <div id="gameProgress" class="bg-gradient-to-r from-amber-300 to-amber-500 h-full w-0 rounded-full transition-all duration-300"></div>
+                </div>
+                <span id="roundCounter" class="text-xs font-bold text-[#4a3319]">0/3</span>
+            </div>
+            <p id="motivationalMessage" class="text-xs text-[#7c6248] font-bold italic">
+                ✨ ¡Selecciona la burbuja correcta para endulzar el panal!
+            </p>
+        </footer>
+    </main>
+
+    <!-- VENTANA MODAL DE VICTORIA -->
+    <div id="victoryModal" class="fixed inset-0 bg-black/65 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-[28px] w-full max-w-sm p-6 sm:p-8 text-center shadow-2xl border-4 border-yellow-400 transform scale-95 transition-transform duration-300 relative">
+            <div class="text-7xl mb-4 animate-bounce">🏆</div>
+            <h3 class="text-2xl font-black text-[#4a3319] mb-2">¡Súper Escritor! 🎉</h3>
+            <p id="victoryMessage" class="text-base font-bold text-[#7c6248] mb-4">
+                ¡Has completado todas las palabras con éxito! Eres un campeón de la ortografía en el panal.
+            </p>
+
+            <!-- Cartel Promocional de la Versión Móvil -->
+            <div class="mb-5 p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border-2 border-dashed border-amber-200 text-center relative overflow-hidden">
+                <span class="absolute top-0 right-0 bg-yellow-400 text-[#4a3319] text-[9px] font-black px-2 py-0.5 rounded-bl-xl uppercase tracking-wider">¡Gratis!</span>
+                <div class="flex items-center gap-3 justify-center mb-2">
+                    <span class="text-3xl animate-pulse">📱</span>
+                    <div class="text-left">
+                        <h4 class="text-xs font-black text-[#4a3319]">¡La Colmena en tu Celular!</h4>
+                        <p class="text-[10px] font-semibold text-[#7c6248]">Juega sin internet y con más niveles mágicos.</p>
+                    </div>
+                </div>
+                <!-- Botones simulados de App Stores -->
+                <div class="flex justify-center gap-2 mt-2">
+                    <a href="#" onclick="playSfx('click'); event.preventDefault();" class="flex items-center gap-1.5 bg-neutral-900 text-white px-2.5 py-1 rounded-lg text-[9px] font-bold hover:bg-neutral-800 transition-colors shadow">
+                        <i class="fa-brands fa-apple text-xs"></i>
+                        <div class="text-left leading-none">
+                            <p class="text-[6px] text-neutral-400">Descarga en el</p>
+                            <p class="font-extrabold -mt-0.5">App Store</p>
+                        </div>
+                    </a>
+                    <a href="#" onclick="playSfx('click'); event.preventDefault();" class="flex items-center gap-1.5 bg-neutral-900 text-white px-2.5 py-1 rounded-lg text-[9px] font-bold hover:bg-neutral-800 transition-colors shadow">
+                        <i class="fa-brands fa-google-play text-xs text-green-400"></i>
+                        <div class="text-left leading-none">
+                            <p class="text-[6px] text-neutral-400">Disponible en</p>
+                            <p class="font-extrabold -mt-0.5">Google Play</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <button onclick="resetGame()" class="w-full py-3.5 btn-honey font-black rounded-xl text-base flex items-center justify-center gap-2 pulse-btn">
+                <i class="fa-solid fa-play"></i> Volver a Jugar
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Audio nativo para sonidos alegres del panal
+        let audioCtx = null;
+
+        // Función para narrar cariñosamente al estilo maestra de preescolar
+        function speakTeacher(text) {
+            if ('speechSynthesis' in window) {
+                // Cancelar cualquier narración previa
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'es-MX'; // Español cálido
+                utterance.pitch = 1.35;   // Tono dulce infantil
+                utterance.rate = 0.82;    // Velocidad pausada
+                
+                const voices = window.speechSynthesis.getVoices();
+                const preferredVoice = voices.find(v => 
+                    v.lang.startsWith('es') && 
+                    (v.name.toLowerCase().includes('google') || 
+                     v.name.toLowerCase().includes('sabrina') || 
+                     v.name.toLowerCase().includes('zira') || 
+                     v.name.toLowerCase().includes('female'))
+                );
+                
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                } else {
+                    const fallbackEs = voices.find(v => v.lang.startsWith('es'));
+                    if (fallbackEs) utterance.voice = fallbackEs;
+                }
+                
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function playTeacherNarration() {
+            const message = "¡Hola, corazoncito! Mira esta palabra tan dulce que tenemos aquí, pero... ¡oh, no! Le falta una letra secreta. ¿Me ayudas a adivinar qué letra es mirando el dibujo? Toca la burbuja de letra correcta abajo para completar el panal de palabras. ¡Tú eres súper inteligente, vamos!";
+            speakTeacher(message);
+        }
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => {};
+        }
+
+        function playSfx(type) {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'correct') {
+                    // Melodía ascendente feliz
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+                    osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+                    osc.start();
+                    osc.stop(now + 0.5);
+                } else if (type === 'wrong') {
+                    // Tono bajo descendente
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(261.63, now); // C4
+                    osc.frequency.exponentialRampToValueAtTime(130.81, now + 0.25); // C3
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start();
+                    osc.stop(now + 0.3);
+                } else if (type === 'click') {
+                    // Toquecito de botón
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(800, now + 0.08);
+                    gain.gain.setValueAtTime(0.06, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                    osc.start();
+                    osc.stop(now + 0.08);
+                } else if (type === 'fanfare') {
+                    // Acorde de victoria majestuoso
+                    osc.type = 'square';
+                    const scale = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+                    scale.forEach((freq, i) => {
+                        osc.frequency.setValueAtTime(freq, now + (i * 0.1));
+                    });
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+                    osc.start();
+                    osc.stop(now + 0.6);
+                }
+            } catch (e) {
+                console.warn("AudioContext no inicializado o bloqueado.");
+            }
+        }
+
+        // Banco de palabras divertidas del bosque de la abejita
+        const wordsPool = [
+            { word: "MIEL", emoji: "🍯" },
+            { word: "FLOR", emoji: "🌸" },
+            { word: "OSITO", emoji: "🧸" },
+            { word: "ARBOL", emoji: "🌳" },
+            { word: "SOL", emoji: "☀️" },
+            { word: "CASA", emoji: "🏡" },
+            { word: "BOTA", emoji: "🥾" },
+            { word: "HOJA", emoji: "🍃" },
+            { word: "RANA", emoji: "🐸" }
+        ];
+
+        let selectedWords = [];
+        let currentWordIndex = 0;
+        let currentWordObj = null;
+        let missingLetterIndex = 0;
+        let missingLetterChar = "";
+        const totalRounds = 3;
+
+        // Frases para motivar en cada acierto
+        const successPhrases = [
+            "⭐ ¡Eres súper inteligente!",
+            "🍯 ¡Riquísimo! Una gotita de miel más.",
+            "🐝 ¡Las abejitas del panal celebran contigo!",
+            "🌸 ¡Completado de forma mágica!"
+        ];
+
+        window.onload = function() {
+            initLetrasGame();
+        };
+
+        function initLetrasGame() {
+            currentWordIndex = 0;
+            // Mezclar y seleccionar 3 palabras diferentes para la partida actual
+            selectedWords = [...wordsPool].sort(() => Math.random() - 0.5).slice(0, totalRounds);
+            
+            document.getElementById('confettiContainer').classList.add('hidden');
+            updateProgress();
+            loadRound();
+        }
+
+        function loadRound() {
+            currentWordObj = selectedWords[currentWordIndex];
+            const word = currentWordObj.word;
+            
+            // Elegir aleatoriamente qué letra ocultar
+            missingLetterIndex = Math.floor(Math.random() * word.length);
+            missingLetterChar = word[missingLetterIndex];
+
+            // Renderizar el emoji ilustrativo
+            document.getElementById('conceptEmoji').innerText = currentWordObj.emoji;
+
+            // Renderizar la palabra en el tablero
+            const wordDisplay = document.getElementById('wordDisplay');
+            wordDisplay.innerHTML = '';
+
+            for (let i = 0; i < word.length; i++) {
+                const charBox = document.createElement('div');
+                
+                if (i === missingLetterIndex) {
+                    // Caja de letra oculta interactiva
+                    charBox.id = "missingBox";
+                    charBox.className = "w-12 h-12 sm:w-14 sm:h-14 bg-amber-50 border-4 border-dashed border-yellow-400 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl font-black text-[#ff9800] animate-pulse";
+                    charBox.innerText = "?";
+                } else {
+                    // Letras normales
+                    charBox.className = "w-12 h-12 sm:w-14 sm:h-14 bg-white border-2 border-[#e6dfd5] rounded-2xl flex items-center justify-center text-2xl sm:text-3xl font-black text-[#4a3319] shadow-sm";
+                    charBox.innerText = word[i];
+                }
+                wordDisplay.appendChild(charBox);
+            }
+
+            // Generar las opciones de burbujas flotantes (1 correcta y 3 aleatorias)
+            const lettersSet = new Set([missingLetterChar]);
+            const alphabet = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+
+            while (lettersSet.size < 4) {
+                const randomChar = alphabet[Math.floor(Math.random() * alphabet.length)];
+                lettersSet.add(randomChar);
+            }
+
+            // Mezclar burbujas de forma aleatoria
+            const choicesArray = Array.from(lettersSet).sort(() => Math.random() - 0.5);
+            const choicesContainer = document.getElementById('letterChoices');
+            choicesContainer.innerHTML = '';
+
+            choicesArray.forEach((letter, index) => {
+                const bubble = document.createElement('button');
+                // Alternar animaciones con desfases de tiempo para lucir más naturales flotando
+                const delay = (index * 0.4).toFixed(1);
+                bubble.className = "bubble-animation w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white hover:bg-amber-50 border-3 border-amber-300 hover:border-amber-400 text-[#4a3319] font-black text-2xl sm:text-3xl flex items-center justify-center shadow-md active:scale-90 transition-all";
+                bubble.style.animationDelay = `${delay}s`;
+                bubble.innerText = letter;
+                bubble.onclick = () => checkAnswer(letter, bubble);
+                choicesContainer.appendChild(bubble);
+            });
+        }
+
+        function checkAnswer(letter, bubble) {
+            if (letter === missingLetterChar) {
+                playSfx('correct');
+                
+                // Efecto visual de burbuja exitosa
+                bubble.className = "w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-emerald-500 border-3 border-emerald-600 text-white font-black text-2xl sm:text-3xl flex items-center justify-center shadow-lg transition-all scale-105";
+                bubble.style.animation = "none";
+                
+                // Revelar la letra en el espacio vacío
+                const missingBox = document.getElementById('missingBox');
+                missingBox.innerText = missingLetterChar;
+                missingBox.className = "w-12 h-12 sm:w-14 sm:h-14 bg-emerald-50 border-3 border-emerald-500 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl font-black text-emerald-600 shadow-md scale-105 transition-all";
+                
+                // Deshabilitar todas las opciones temporalmente
+                document.querySelectorAll('#letterChoices button').forEach(btn => btn.disabled = true);
+
+                // Mensaje de éxito dulce
+                const randomPhrase = successPhrases[Math.floor(Math.random() * successPhrases.length)];
+                document.getElementById('motivationalMessage').innerText = randomPhrase;
+
+                // Avanzar con un ligero delay
+                setTimeout(() => {
+                    currentWordIndex++;
+                    updateProgress();
+                    
+                    if (currentWordIndex >= totalRounds) {
+                        triggerVictory();
+                    } else {
+                        loadRound();
+                    }
+                }, 1400);
+
+            } else {
+                playSfx('wrong');
+                // Estilizar error visual temporal
+                bubble.classList.remove('bg-white', 'hover:bg-amber-50');
+                bubble.classList.add('bg-rose-100', 'border-rose-400', 'text-rose-600', 'animate-shake');
+                
+                // Retirar animación de sacudida para poder repetirla si se vuelve a fallar
+                setTimeout(() => bubble.classList.remove('animate-shake'), 400);
+            }
+        }
+
+        function updateProgress() {
+            const bar = document.getElementById('gameProgress');
+            const counter = document.getElementById('roundCounter');
+            
+            const percent = (currentWordIndex / totalRounds) * 100;
+            bar.style.width = `${percent}%`;
+            counter.innerText = `${currentWordIndex}/${totalRounds}`;
+        }
+
+        function triggerVictory() {
+            playSfx('fanfare');
+            startConfetti();
+
+            const modal = document.getElementById('victoryModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.querySelector('div').classList.remove('scale-95');
+            }, 10);
+        }
+
+        function resetGame() {
+            playSfx('click');
+            const modal = document.getElementById('victoryModal');
+            modal.classList.add('opacity-0');
+            modal.querySelector('div').classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.getElementById('motivationalMessage').innerText = "✨ ¡Selecciona la burbuja correcta para endulzar el panal!";
+                initLetrasGame();
+            }, 300);
+        }
+
+        function startConfetti() {
+            const container = document.getElementById('confettiContainer');
+            container.innerHTML = '';
+            container.classList.remove('hidden');
+
+            const colors = ['#ffd54f', '#ffb300', '#ff6b6b', '#4ecdc4', '#a29bfe', '#a8e6cf'];
+            
+            for (let i = 0; i < 45; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Variar formas y tamaños
+                piece.style.width = `${Math.floor(Math.random() * 8) + 7}px`;
+                piece.style.height = `${Math.floor(Math.random() * 14) + 10}px`;
+                piece.style.left = `${Math.floor(Math.random() * 100)}vw`;
+                
+                // Variar velocidad y retraso
+                piece.style.animationDuration = `${(Math.random() * 1.8 + 1.5).toFixed(1)}s`;
+                piece.style.animationDelay = `${(Math.random() * 1.2).toFixed(1)}s`;
+                
+                container.appendChild(piece);
+            }
+        }
+    </script>
+</body>
+</html>

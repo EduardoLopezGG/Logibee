@@ -1,0 +1,71 @@
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        body {
+            background: url('../IMG/Logibee_background.png') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            padding-bottom: 80px; /* Espacio para el navbar de móvil */
+        }
+
+        /* Contenedor principal estilo cristal esmerilado de la marca */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.93);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 
+                        inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(253, 213, 189, 0.4);
+        }
+
+        /* Botón con degradado de miel */
+        .btn-honey {
+            background: linear-gradient(135deg, #ffca28, #ff9800);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn-honey:hover {
+            background: linear-gradient(135deg, #ffd54f, #fb8c00);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+            transform: scale(1.05);
+        }
+
+        /* Animación juguetona de abejita */
+        @keyframes hoverBee {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(3deg); }
+        }
+
+        .animate-bee {
+            animation: hoverBee 3s ease-in-out infinite;
+        }
+
+        /* Efecto de pulso en victoria / botones de juego */
+        .pulse-soft {
+            animation: pulsePlay 2s infinite alternate;
+        }
+
+        @keyframes pulsePlay {
+            0% { transform: scale(1); box-shadow: 0 4px 10px rgba(255, 152, 0, 0.2); }
+            100% { transform: scale(1.03); box-shadow: 0 8px 20px rgba(255, 152, 0, 0.4); }
+        }
+
+        /* Camino del mapa con guiones dinámicos */
+        .map-path {
+            stroke-dasharray: 8, 8;
+            animation: dash 30s linear infinite;
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -1000;
+            }
+        }

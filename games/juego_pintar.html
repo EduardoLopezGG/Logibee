@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pintando Panales - El Panal de la Abejita</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Tipografía infantil redondeada -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Iconos divertidos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../public/styles_paint_game.css">
+</head>
+<body>
+
+    <!-- Contenedor dinámico de confeti -->
+    <div id="confettiContainer" class="absolute inset-0 pointer-events-none overflow-hidden z-40 hidden"></div>
+
+    <main class="w-full max-w-2xl glass-panel rounded-[28px] p-6 sm:p-8 text-center relative flex flex-col justify-between min-h-[580px]">
+        
+        <!-- HEADER DEL JUEGO (Voz de maestra eliminada) -->
+        <header class="flex flex-col sm:flex-row items-center justify-between gap-3 pb-4 border-b-2 border-dashed border-amber-100 z-10">
+            <div class="flex items-center gap-2.5">
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center text-2xl bg-amber-100 shadow-sm border border-yellow-300">
+                    🎨
+                </div>
+                <div class="text-left">
+                    <p class="text-xs font-bold text-[#7c6248]">Misión del día</p>
+                    <h2 class="text-base font-black text-[#4a3319]">Pintando Panales</h2>
+                </div>
+            </div>
+
+            <!-- Título Central -->
+            <div class="bg-amber-100/60 px-4 py-1.5 rounded-full border border-amber-200">
+                <h1 class="text-sm sm:text-base font-black text-[#4a3319] flex items-center gap-1.5">
+                    🐝 ¡Dale magia al dibujo!
+                </h1>
+            </div>
+
+            <!-- Botón de Reinicio Rápido -->
+            <button onclick="resetGame()" class="px-4 py-2 rounded-xl border-2 border-[#e6dfd5] bg-white text-[#7c6248] hover:text-[#4a3319] hover:border-[#ffca28] font-bold text-xs transition-all flex items-center gap-1.5 active:scale-95">
+                <i class="fa-solid fa-rotate-right"></i> Limpiar lienzo
+            </button>
+        </header>
+
+        <!-- ÁREA INTERACTIVA DE JUEGO -->
+        <section class="my-4 flex-grow flex flex-col justify-center items-center relative z-10">
+            <p class="text-base sm:text-lg font-bold text-[#4a3319] mb-3">
+                ¡Selecciona un color y toca cualquier espacio de la abejita! 🌸
+            </p>
+
+            <!-- Paleta de Colores Miel y Pastel -->
+            <div id="colorPalette" class="flex flex-wrap justify-center gap-2.5 mb-4 p-2.5 bg-amber-50/50 rounded-2xl border border-amber-100 max-w-lg shadow-inner">
+                <!-- Se genera dinámicamente con JS -->
+            </div>
+            
+            <!-- Lienzo de Ilustración SVG Coloreable -->
+            <div class="w-full max-w-lg h-64 bg-white border-2 border-amber-200 rounded-3xl p-3 shadow-inner flex items-center justify-center relative">
+                <svg id="coloringSvg" viewBox="0 0 400 300" class="w-full h-full max-h-56">
+                    <!-- Panal de Fondo Izquierdo (Celdas colorables) -->
+                    <polygon class="colorable fill-slate-50 stroke-slate-300" stroke-width="2" id="honey-1" points="40,50 70,35 100,50 100,80 70,95 40,80" />
+                    <polygon class="colorable fill-slate-50 stroke-slate-300" stroke-width="2" id="honey-2" points="100,50 130,35 160,50 160,80 130,95 100,80" />
+                    <polygon class="colorable fill-slate-50 stroke-slate-300" stroke-width="2" id="honey-3" points="70,95 100,80 130,95 130,125 100,140 70,125" />
+
+                    <!-- Flor Derecha Coloreable -->
+                    <path class="colorable fill-slate-50 stroke-slate-300" stroke-width="2" id="petal-top" d="M 320 70 C 320 40, 350 40, 350 70 Z" />
+                    <path class="colorable fill-slate-50 stroke-slate-300" stroke-width="2" id="petal-right" d="M 350 100 C 380 100, 380 70, 350 70 Z" />
+                    <path class="colorable fill-slate-50 stroke-slate-300" stroke-width="2" id="petal-bottom" d="M 350 100 C 350 130, 320 130, 320 100 Z" />
+                    <path class="colorable fill-slate-50 stroke-slate-300" stroke-width="2" id="petal-left" d="M 320 70 C 290 70, 290 100, 320 100 Z" />
+                    <!-- Centro de flor -->
+                    <circle class="colorable fill-slate-50 stroke-slate-300" stroke-width="2" id="flower-center" cx="335" cy="85" r="15" />
+                    <!-- Tallo de la flor -->
+                    <path class="colorable fill-slate-50 stroke-slate-300" stroke-width="2" id="flower-stem" d="M 335 115 Q 330 170, 310 220 L 315 221 Q 335 171, 340 115 Z" />
+
+                    <!-- Abejita Principal Cariñosa -->
+                    <!-- Alita izquierda -->
+                    <path class="colorable fill-slate-50 stroke-slate-300" stroke-width="2" id="wing-left" d="M 165 145 C 145 120, 125 135, 140 155 C 150 165, 160 155, 165 152 Z" />
+                    <!-- Alita derecha -->
+                    <path class="colorable fill-slate-50 stroke-slate-300" stroke-width="2" id="wing-right" d="M 235 145 C 255 120, 275 135, 260 155 C 250 165, 240 155, 235 152 Z" />
+                    
+                    <!-- Cuerpo / Cabeza de la abeja -->
+                    <path class="colorable fill-slate-50 stroke-slate-300" stroke-width="2" id="bee-body" d="M 200 120 C 175 120, 160 138, 160 160 C 160 182, 175 200, 200 200 C 225 200, 240 182, 240 160 C 240 138, 225 120, 200 120 Z" />
+                    
+                    <!-- Rayitas de la abejita -->
+                    <path class="colorable fill-slate-50 stroke-slate-300" stroke-width="2" id="bee-stripe-1" d="M 172 182 Q 200 192, 228 182 L 225 190 Q 200 200, 175 190 Z" />
+                    <path class="colorable fill-slate-50 stroke-slate-300" stroke-width="2" id="bee-stripe-2" d="M 164 160 Q 200 170, 236 160 L 234 168 Q 200 178, 166 168 Z" />
+                    <path class="colorable fill-slate-50 stroke-slate-300" stroke-width="2" id="bee-stripe-3" d="M 172 138 Q 200 148, 228 138 L 225 145 Q 200 155, 175 145 Z" />
+
+                    <!-- Antenas -->
+                    <path class="colorable fill-slate-50 stroke-slate-300" stroke-width="2" id="antenna-left" d="M 190 120 Q 180 100, 170 105" />
+                    <path class="colorable fill-slate-50 stroke-slate-300" stroke-width="2" id="antenna-right" d="M 210 120 Q 220 100, 230 105" />
+
+                    <!-- Ojitos y sonrisa tiernos -->
+                    <circle cx="185" cy="155" r="4.5" fill="#4a3319" />
+                    <circle cx="215" cy="155" r="4.5" fill="#4a3319" />
+                    <circle cx="182" cy="157" r="1.5" fill="white" />
+                    <circle cx="212" cy="157" r="1.5" fill="white" />
+                    <!-- Mejillas sonrosadas -->
+                    <circle cx="177" cy="164" r="3" fill="#ff8a80" opacity="0.6"/>
+                    <circle cx="223" cy="164" r="3" fill="#ff8a80" opacity="0.6"/>
+                    <!-- Sonrisa feliz -->
+                    <path d="M 194 168 Q 200 174, 206 168" fill="none" stroke="#4a3319" stroke-width="2.5" stroke-linecap="round" />
+                </svg>
+            </div>
+
+            <!-- Botón de finalizar obra de arte -->
+            <button onclick="checkPaintingProgress()" class="mt-2 px-8 py-3 btn-honey font-black rounded-2xl text-base flex items-center justify-center gap-2 pulse-btn transition-all">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> ¡He terminado mi dibujo! 🎨✨
+            </button>
+        </section>
+
+        <!-- BARRA DE PROGRESO Y COMENTARIOS -->
+        <footer class="mt-2 pt-4 border-t border-[#e6dfd5] flex flex-col items-center gap-3 relative z-10">
+            <div class="w-full max-w-xs flex items-center gap-2">
+                <span class="text-xs font-bold text-[#7c6248]">Colorido:</span>
+                <div class="flex-grow bg-[#e6dfd5] h-3.5 rounded-full overflow-hidden p-[2px]">
+                    <div id="gameProgress" class="bg-gradient-to-r from-amber-300 to-amber-500 h-full w-0 rounded-full transition-all duration-300"></div>
+                </div>
+                <span id="areasCounter" class="text-xs font-bold text-[#4a3319]">0/6</span>
+            </div>
+            <p id="motivationalMessage" class="text-xs text-[#7c6248] font-bold italic">
+                ✨ ¡Pinta por lo menos 6 partes diferentes para completar el reto del panal!
+            </p>
+        </footer>
+    </main>
+
+    <!-- VENTANA MODAL DE VICTORIA -->
+    <div id="victoryModal" class="fixed inset-0 bg-black/65 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-[28px] w-full max-w-sm p-6 sm:p-8 text-center shadow-2xl border-4 border-yellow-400 transform scale-95 transition-transform duration-300 relative">
+            <div class="text-7xl mb-4 animate-bounce">🏆</div>
+            <h3 class="text-2xl font-black text-[#4a3319] mb-2">¡Gran Artista! 🎉</h3>
+            <p id="victoryMessage" class="text-base font-bold text-[#7c6248] mb-4">
+                ¡Tu dibujo de la abejita ha quedado espectacular y lleno de vida! Tienes un talento de oro.
+            </p>
+
+            <!-- Cartel Promocional de la Versión Móvil -->
+            <div class="mb-5 p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border-2 border-dashed border-amber-200 text-center relative overflow-hidden">
+                <span class="absolute top-0 right-0 bg-yellow-400 text-[#4a3319] text-[9px] font-black px-2 py-0.5 rounded-bl-xl uppercase tracking-wider">¡Gratis!</span>
+                <div class="flex items-center gap-3 justify-center mb-2">
+                    <span class="text-3xl animate-pulse">📱</span>
+                    <div class="text-left">
+                        <h4 class="text-xs font-black text-[#4a3319]">¡La Colmena en tu Celular!</h4>
+                        <p class="text-[10px] font-semibold text-[#7c6248]">Juega sin internet y con más niveles mágicos.</p>
+                    </div>
+                </div>
+                <!-- Botones simulados de App Stores -->
+                <div class="flex justify-center gap-2 mt-2">
+                    <a href="#" onclick="playSfx('click'); event.preventDefault();" class="flex items-center gap-1.5 bg-neutral-900 text-white px-2.5 py-1 rounded-lg text-[9px] font-bold hover:bg-neutral-800 transition-colors shadow">
+                        <i class="fa-brands fa-apple text-xs"></i>
+                        <div class="text-left leading-none">
+                            <p class="text-[6px] text-neutral-400">Descarga en el</p>
+                            <p class="font-extrabold -mt-0.5">App Store</p>
+                        </div>
+                    </a>
+                    <a href="#" onclick="playSfx('click'); event.preventDefault();" class="flex items-center gap-1.5 bg-neutral-900 text-white px-2.5 py-1 rounded-lg text-[9px] font-bold hover:bg-neutral-800 transition-colors shadow">
+                        <i class="fa-brands fa-google-play text-xs text-green-400"></i>
+                        <div class="text-left leading-none">
+                            <p class="text-[6px] text-neutral-400">Disponible en</p>
+                            <p class="font-extrabold -mt-0.5">Google Play</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <button onclick="resetGame()" class="w-full py-3.5 btn-honey font-black rounded-xl text-base flex items-center justify-center gap-2 pulse-btn">
+                <i class="fa-solid fa-paint-brush"></i> Pintar Otra Vez
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Audio nativo para sonidos interactivos
+        let audioCtx = null;
+
+        // Función para narrar cariñosamente al estilo maestra de preescolar
+        function speakTeacher(text) {
+            if ('speechSynthesis' in window) {
+                // Cancelar cualquier narración previa
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'es-MX'; // Español latino/cálido
+                utterance.pitch = 1.35;   // Tono más dulce y animado
+                utterance.rate = 0.82;    // Velocidad pausada y comprensible para niños
+                
+                // Intentar cargar voces amigables del sistema
+                const voices = window.speechSynthesis.getVoices();
+                const preferredVoice = voices.find(v => 
+                    v.lang.startsWith('es') && 
+                    (v.name.toLowerCase().includes('google') || 
+                     v.name.toLowerCase().includes('sabrina') || 
+                     v.name.toLowerCase().includes('zira') || 
+                     v.name.toLowerCase().includes('female'))
+                );
+                
+                if (preferredVoice) {
+                    utterance.voice = preferredVoice;
+                } else {
+                    const fallbackEs = voices.find(v => v.lang.startsWith('es'));
+                    if (fallbackEs) utterance.voice = fallbackEs;
+                }
+                
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function playTeacherNarration() {
+            const message = "¡Hola, mi pequeño artista! Mira este hermoso dibujo de nuestra abejita, pero está un poco triste porque le falta color. Elige tu color preferido en la paleta de abajo y toca cada parte del dibujo para llenarlo de magia. ¡Hagamos una súper obra de arte juntos!";
+            speakTeacher(message);
+        }
+
+        // Asegurar que las voces estén cargadas en navegadores que cargan voces de forma asíncrona
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => {};
+        }
+
+        function playSfx(type) {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                const now = audioCtx.currentTime;
+
+                if (type === 'correct') {
+                    // Melodía mágica ascendente
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                    osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+                    osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
+                    gain.gain.setValueAtTime(0.12, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+                    osc.start();
+                    osc.stop(now + 0.5);
+                } else if (type === 'wrong') {
+                    // Sonido descendente en error de progreso
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(261.63, now); // C4
+                    osc.frequency.exponentialRampToValueAtTime(130.81, now + 0.25); // C3
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start();
+                    osc.stop(now + 0.3);
+                } else if (type === 'click') {
+                    // Sonido tipo "bubble pop" al seleccionar color
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(350, now);
+                    osc.frequency.exponentialRampToValueAtTime(700, now + 0.08);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                    osc.start();
+                    osc.stop(now + 0.08);
+                } else if (type === 'paint') {
+                    // Sonido fluido de pincel
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.exponentialRampToValueAtTime(1200, now + 0.15);
+                    gain.gain.setValueAtTime(0.05, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                    osc.start();
+                    osc.stop(now + 0.15);
+                } else if (type === 'fanfare') {
+                    // Acorde triunfal para victoria
+                    osc.type = 'square';
+                    const scale = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+                    scale.forEach((freq, i) => {
+                        osc.frequency.setValueAtTime(freq, now + (i * 0.1));
+                    });
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+                    osc.start();
+                    osc.stop(now + 0.6);
+                }
+            } catch (e) {
+                console.warn("AudioContext bloqueado por políticas de navegador.");
+            }
+        }
+
+        // Paleta de colores suaves e infantiles
+        const paletteColors = [
+            { id: 'yellow-light', hex: '#fff176', name: 'Amarillo Sol' },
+            { id: 'amber-dark', hex: '#ffb300', name: 'Dulce Miel' },
+            { id: 'rose-sweet', hex: '#ff8a80', name: 'Mejillas' },
+            { id: 'red-cherry', hex: '#ff1744', name: 'Cereza' },
+            { id: 'peach-pastel', hex: '#ffab91', name: 'Durazno' },
+            { id: 'pink-rose', hex: '#f48fb1', name: 'Rosa Flor' },
+            { id: 'mint-fresh', hex: '#a7ffeb', name: 'Menta' },
+            { id: 'green-leaf', hex: '#81c784', name: 'Pradera' },
+            { id: 'sky-blue', hex: '#80deea', name: 'Cielo' },
+            { id: 'indigo-magic', hex: '#b39ddb', name: 'Lavanda' }
+        ];
+
+        let selectedColor = '#ffb300'; // Color Miel por defecto
+        let coloredAreas = new Set(); // Guardar qué elementos han sido coloreados
+        const totalRequiredAreas = 6; // Meta para ganar
+
+        // Frases para motivar en cada clic de color
+        const paintPhrases = [
+            "🎨 ¡Qué hermoso se está viendo!",
+            "✨ ¡Uau, estás creando arte mágico!",
+            "🐝 ¡A la abejita le encanta ese color!",
+            "🌸 ¡Qué combinación tan dulce!",
+            "💖 ¡Eres todo un artista de la colmena!"
+        ];
+
+        window.onload = function() {
+            initPintarGame();
+        };
+
+        function initPintarGame() {
+            coloredAreas.clear();
+            selectedColor = '#ffb300';
+            document.getElementById('confettiContainer').classList.add('hidden');
+            
+            updateProgress();
+            renderPalette();
+            resetSvgPaths();
+            setupSvgInteractivity();
+        }
+
+        // Renderizar botones de la paleta con indicadores visuales de selección
+        function renderPalette() {
+            const container = document.getElementById('colorPalette');
+            container.innerHTML = '';
+
+            paletteColors.forEach(color => {
+                const button = document.createElement('button');
+                button.className = "w-9 h-9 sm:w-11 sm:h-11 rounded-full border-3 border-white shadow-md transform hover:scale-110 active:scale-95 transition-all relative flex items-center justify-center";
+                button.style.backgroundColor = color.hex;
+                button.title = color.name;
+
+                // Agregar marca para identificar el color activo
+                if (color.hex === selectedColor) {
+                    button.classList.add('ring-4', 'ring-amber-400');
+                    button.innerHTML = '<i class="fa-solid fa-paintbrush text-xs text-white drop-shadow-md"></i>';
+                }
+
+                button.onclick = () => {
+                    playSfx('click');
+                    selectedColor = color.hex;
+                    renderPalette(); // Refrescar indicadores
+                };
+
+                container.appendChild(button);
+            });
+        }
+
+        // Forzar fondo blanco/grisáceo para pintar
+        function resetSvgPaths() {
+            const paths = document.querySelectorAll('.colorable');
+            paths.forEach(path => {
+                path.style.fill = '#f8fafc';
+                path.style.stroke = '#cbd5e1';
+                path.setAttribute('stroke-width', '2');
+            });
+        }
+
+        // Vincular los eventos de colorear a los elementos interactivos del dibujo
+        function setupSvgInteractivity() {
+            const paths = document.querySelectorAll('.colorable');
+            paths.forEach(path => {
+                const colorAction = (e) => {
+                    if (e) e.preventDefault();
+                    playSfx('paint');
+
+                    // Pintar el elemento con el color activo y darle un borde oscuro armónico
+                    path.style.fill = selectedColor;
+                    path.style.stroke = darkenHexColor(selectedColor, -25);
+                    path.setAttribute('stroke-width', '2.5');
+
+                    // Registrar esta área como coloreada
+                    coloredAreas.add(path.id);
+                    updateProgress();
+
+                    // Mensaje motivador flotante aleatorio
+                    if (Math.random() > 0.4) {
+                        const randomPhrase = paintPhrases[Math.floor(Math.random() * paintPhrases.length)];
+                        document.getElementById('motivationalMessage').innerText = randomPhrase;
+                    }
+                };
+
+                // Soporte multidispositivo unificado
+                path.onclick = colorAction;
+                path.ontouchstart = colorAction;
+            });
+        }
+
+        // Función útil para oscurecer el borde del color pintado
+        function darkenHexColor(hex, percent) {
+            let num = parseInt(hex.replace("#",""), 16),
+            amt = Math.round(2.55 * percent),
+            R = (num >> 16) + amt,
+            G = (num >> 8 & 0x00FF) + amt,
+            B = (num & 0x0000FF) + amt;
+            return "#" + (0x1000000 + (R<255?R<0?0:R:255)*0x10000 + (G<255?G<0?0:G:255)*0x100 + (B<255?B<0?0:B:255)).toString(16).slice(1);
+        }
+
+        function updateProgress() {
+            const bar = document.getElementById('gameProgress');
+            const counter = document.getElementById('areasCounter');
+            
+            const currentCount = Math.min(coloredAreas.size, totalRequiredAreas);
+            const percent = (currentCount / totalRequiredAreas) * 100;
+            
+            bar.style.width = `${percent}%`;
+            counter.innerText = `${coloredAreas.size}/${totalRequiredAreas}`;
+        }
+
+        function checkPaintingProgress() {
+            if (coloredAreas.size < totalRequiredAreas) {
+                playSfx('wrong');
+                // Sacudir el botón de "Listo" en señal de advertencia amigable
+                const btn = document.querySelector('.pulse-btn');
+                btn.classList.add('bg-rose-500', 'animate-shake');
+                
+                document.getElementById('motivationalMessage').innerText = "⚠️ ¡Vamos, pinta un poquito más antes de terminar tu obra maestra!";
+                
+                setTimeout(() => {
+                    btn.classList.remove('bg-rose-500', 'animate-shake');
+                }, 500);
+            } else {
+                triggerVictory();
+            }
+        }
+
+        function triggerVictory() {
+            playSfx('fanfare');
+            startConfetti();
+
+            const modal = document.getElementById('victoryModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.querySelector('div').classList.remove('scale-95');
+            }, 10);
+        }
+
+        function resetGame() {
+            playSfx('click');
+            const modal = document.getElementById('victoryModal');
+            modal.classList.add('opacity-0');
+            modal.querySelector('div').classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.getElementById('motivationalMessage').innerText = "✨ ¡Pinta por lo menos 6 partes diferentes para completar el reto del panal!";
+                initPintarGame();
+            }, 300);
+        }
+
+        function startConfetti() {
+            const container = document.getElementById('confettiContainer');
+            container.innerHTML = '';
+            container.classList.remove('hidden');
+
+            const colors = ['#ffd54f', '#ffb300', '#ff6b6b', '#4ecdc4', '#a29bfe', '#a8e6cf'];
+            
+            for (let i = 0; i < 45; i++) {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Variar formas y tamaños del pincel
+                piece.style.width = `${Math.floor(Math.random() * 8) + 7}px`;
+                piece.style.height = `${Math.floor(Math.random() * 14) + 10}px`;
+                piece.style.left = `${Math.floor(Math.random() * 100)}vw`;
+                
+                // Variar velocidad y retraso
+                piece.style.animationDuration = `${(Math.random() * 1.8 + 1.5).toFixed(1)}s`;
+                piece.style.animationDelay = `${(Math.random() * 1.2).toFixed(1)}s`;
+                
+                container.appendChild(piece);
+            }
+        }
+    </script>
+</body>
+</html>

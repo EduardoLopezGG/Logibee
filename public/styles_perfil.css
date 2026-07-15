@@ -1,0 +1,147 @@
+* {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            /* Mismo fondo de la abejita amigable en el campo de flores */
+            background: url('../IMG/Logibee_background.png') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Capa suave idéntica para contraste de fondo */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 0;
+        }
+
+        /* Contenedor principal con efecto de cristal esmerilado de Registro */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 
+                        inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(253, 213, 189, 0.4);
+            z-index: 1;
+        }
+
+        /* Estilos de Tipografías Unificados */
+        .sweet-brown-title {
+            color: #4a3319;
+            font-weight: 700;
+        }
+
+        .sweet-brown-subtitle {
+            color: #7c6248;
+        }
+
+        /* Botón con Degradado de Miel característico de la marca */
+        .btn-honey {
+            background: linear-gradient(135deg, #ffca28, #ff9800);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-honey:hover {
+            background: linear-gradient(135deg, #ffd54f, #fb8c00);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .btn-honey:active {
+            transform: translateY(1px);
+        }
+
+        /* Botón Secundario de Madera / Crema */
+        .btn-wood {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #e6dfd5;
+            color: #4a3319;
+            transition: all 0.3s ease;
+        }
+
+        .btn-wood:hover {
+            border-color: #ffb300;
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(255, 179, 0, 0.15);
+        }
+
+        /* Animación juguetona para la abejita flotante */
+        .animate-float-slow {
+            animation: floatSlow 4s ease-in-out infinite;
+        }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(3deg); }
+        }
+
+        /* Animación para perfiles en modo edición */
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+        .jiggle {
+            animation: wiggle 0.25s infinite ease-in-out;
+        }
+
+        /* Tarjeta de perfil estilizada */
+        .profile-card-inner {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 3px solid #e6dfd5;
+            background: #ffffff;
+        }
+
+        .profile-card:hover .profile-card-inner {
+            transform: scale(1.08) translateY(-4px);
+            border-color: #ffb300;
+            box-shadow: 0 10px 25px rgba(255, 179, 0, 0.25);
+        }
+
+        /* Inputs con iconos */
+        .input-wrapper input {
+            width: 100%;
+            padding: 12px 15px 12px 42px;
+            border: 2px solid #e6dfd5;
+            border-radius: 14px;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.85);
+            color: #4a3319;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #ffb300;
+            background-color: #fff;
+            box-shadow: 0 0 8px rgba(255, 179, 0, 0.2);
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            color: #cca474;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        .input-wrapper input:focus + i {
+            color: #ffb300;
+        }
