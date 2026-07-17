@@ -3,6 +3,4 @@ node_modules
 url_db.env
 
 /generated/prisma
-package-lock.json
-package.json
 /IMG
