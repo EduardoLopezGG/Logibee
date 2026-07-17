@@ -12,67 +12,139 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;900&display=swap" rel="stylesheet">
     <!-- Iconos divertidos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="../public/styles_number_game.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        body {
+            background: url('watermarked_img_9780776355970194250.png') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            z-index: 0;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.93);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 
+                        inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(253, 213, 189, 0.4);
+            z-index: 1;
+        }
+
+        .btn-honey {
+            background: linear-gradient(135deg, #ffca28, #ff9800);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn-honey:hover {
+            background: linear-gradient(135deg, #ffd54f, #fb8c00);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+            transform: scale(1.05);
+        }
+
+        @keyframes floatBee {
+            0% { transform: translate(0, 0) scaleX(1); }
+            45% { transform: translate(15px, -15px) scaleX(1); }
+            50% { transform: translate(15px, -15px) scaleX(-1); }
+            95% { transform: translate(-5px, 5px) scaleX(-1); }
+            100% { transform: translate(0, 0) scaleX(1); }
+        }
+
+        .bee-animation {
+            animation: floatBee 3.5s ease-in-out infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        .animate-shake {
+            animation: shake 0.3s ease-in-out;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .confetti-piece {
+            position: absolute;
+            animation: fall 3s linear infinite;
+            z-index: 50;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Confeti de victoria (contenedor dinámico) -->
     <div id="confettiContainer" class="absolute inset-0 pointer-events-none overflow-hidden z-40 hidden"></div>
 
     <main class="w-full max-w-2xl glass-panel rounded-[28px] p-6 sm:p-8 text-center relative flex flex-col justify-between min-h-[580px]">
         
-        <!-- HEADER DEL JUEGO (Voz de maestra eliminada) -->
         <header class="flex flex-col sm:flex-row items-center justify-between gap-3 pb-4 border-b-2 border-dashed border-amber-100 z-10">
             <div class="flex items-center gap-2.5">
-                <div class="w-11 h-11 rounded-xl flex items-center justify-center text-2xl bg-amber-100 shadow-sm border border-yellow-300">
-                    🐝
-                </div>
+                <div class="w-11 h-11 rounded-xl flex items-center justify-center text-2xl bg-amber-100 border border-yellow-300">🐝</div>
                 <div class="text-left">
                     <p class="text-xs font-bold text-[#7c6248]">Misión del día</p>
                     <h2 class="text-base font-black text-[#4a3319]">Contar Abejitas</h2>
                 </div>
             </div>
 
-            <!-- Botón de Reinicio Rápido -->
-            <button onclick="resetGame()" class="px-4 py-2 rounded-xl border-2 border-[#e6dfd5] bg-white text-[#7c6248] hover:text-[#4a3319] hover:border-[#ffca28] font-bold text-xs transition-all flex items-center gap-1.5 active:scale-95">
-                <i class="fa-solid fa-rotate-right"></i> Reiniciar
+            <button onclick="exitToDashboard()" class="px-4 py-2 rounded-xl border-2 border-[#e6dfd5] bg-white text-[#7c6248] hover:text-[#4a3319] hover:border-[#ffca28] font-bold text-xs transition-all flex items-center gap-1.5 active:scale-95">
+                <i class="fa-solid fa-house"></i> Volver
             </button>
         </header>
 
-        <!-- ÁREA INTERACTIVA DE JUEGO -->
         <section class="my-6 flex-grow flex flex-col justify-center items-center relative z-10">
-            <p class="text-lg sm:text-xl font-bold text-[#4a3319] mb-4">
-                ¿Cuántas abejitas alegres están volando en la flor? 🌸
-            </p>
+            <p class="text-lg sm:text-xl font-bold text-[#4a3319] mb-4">¿Cuántas abejitas alegres están volando en la flor? 🌸</p>
             
-            <!-- Campo de flores donde aparecen las abejas -->
             <div class="w-full max-w-lg h-56 bg-gradient-to-b from-sky-50 to-emerald-50 border-2 border-amber-200 rounded-3xl relative overflow-hidden flex items-center justify-center mb-6 shadow-inner">
-                <!-- Flor central fija -->
                 <span class="text-7xl drop-shadow-md z-10 select-none">🌸</span>
-                <!-- Contenedor dinámico de abejas flotando -->
                 <div id="beesArea" class="absolute inset-0"></div>
             </div>
 
-            <!-- Opciones de Respuesta en botones grandes para dedos de niños -->
             <div class="flex justify-center gap-4 w-full max-w-sm">
-                <div id="numbersOptions" class="grid grid-cols-3 gap-4 w-full">
-                    <!-- Los botones con los números se generan con JS -->
-                </div>
+                <div id="numbersOptions" class="grid grid-cols-3 gap-4 w-full"></div>
             </div>
         </section>
 
-        <!-- BARRA DE PROGRESO Y COMENTARIOS -->
         <footer class="mt-2 pt-4 border-t border-[#e6dfd5] flex flex-col items-center gap-3 relative z-10">
             <div class="w-full max-w-xs flex items-center gap-2">
-                <span class="text-xs font-bold text-[#7c6248]">Tus Estrellas:</span>
+                <span class="text-xs font-bold text-[#7c6248]">Progreso:</span>
                 <div class="flex-grow bg-[#e6dfd5] h-3.5 rounded-full overflow-hidden p-[2px]">
                     <div id="numerosProgress" class="bg-gradient-to-r from-yellow-300 to-amber-500 h-full w-0 rounded-full transition-all duration-300"></div>
                 </div>
                 <span id="roundCounter" class="text-xs font-bold text-[#4a3319]">0/3</span>
             </div>
-            <p id="motivationalMessage" class="text-xs text-[#7c6248] font-bold italic">
-                ✨ ¡Toca la respuesta correcta para ganar chispas de miel!
-            </p>
+            <p id="motivationalMessage" class="text-xs text-[#7c6248] font-bold italic">✨ ¡Toca la respuesta correcta para ganar gotitas de miel!</p>
         </footer>
     </main>
 
@@ -81,153 +153,19 @@
         <div class="bg-white rounded-[28px] w-full max-w-sm p-6 sm:p-8 text-center shadow-2xl border-4 border-yellow-400 transform scale-95 transition-transform duration-300 relative">
             <div class="text-7xl mb-4 animate-bounce">🏆</div>
             <h3 class="text-2xl font-black text-[#4a3319] mb-2">¡Increíble! 🎉</h3>
-            <p id="victoryMessage" class="text-base font-bold text-[#7c6248] mb-4">
-                ¡Has contado todas las abejitas de forma fantástica! Te ganaste una súper gota de miel pura.
-            </p>
-
-            <!-- Cartel Promocional de la Versión Móvil -->
-            <div class="mb-5 p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border-2 border-dashed border-amber-200 text-center relative overflow-hidden">
-                <span class="absolute top-0 right-0 bg-yellow-400 text-[#4a3319] text-[9px] font-black px-2 py-0.5 rounded-bl-xl uppercase tracking-wider">¡Gratis!</span>
-                <div class="flex items-center gap-3 justify-center mb-2">
-                    <span class="text-3xl animate-pulse">📱</span>
-                    <div class="text-left">
-                        <h4 class="text-xs font-black text-[#4a3319]">¡La Colmena en tu Celular!</h4>
-                        <p class="text-[10px] font-semibold text-[#7c6248]">Juega sin internet y con más niveles mágicos.</p>
-                    </div>
-                </div>
-                <!-- Botones simulados de App Stores -->
-                <div class="flex justify-center gap-2 mt-2">
-                    <a href="#" onclick="playSfx('click'); event.preventDefault();" class="flex items-center gap-1.5 bg-neutral-900 text-white px-2.5 py-1 rounded-lg text-[9px] font-bold hover:bg-neutral-800 transition-colors shadow">
-                        <i class="fa-brands fa-apple text-xs"></i>
-                        <div class="text-left leading-none">
-                            <p class="text-[6px] text-neutral-400">Descarga en el</p>
-                            <p class="font-extrabold -mt-0.5">App Store</p>
-                        </div>
-                    </a>
-                    <a href="#" onclick="playSfx('click'); event.preventDefault();" class="flex items-center gap-1.5 bg-neutral-900 text-white px-2.5 py-1 rounded-lg text-[9px] font-bold hover:bg-neutral-800 transition-colors shadow">
-                        <i class="fa-brands fa-google-play text-xs text-green-400"></i>
-                        <div class="text-left leading-none">
-                            <p class="text-[6px] text-neutral-400">Disponible en</p>
-                            <p class="font-extrabold -mt-0.5">Google Play</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <button onclick="resetGame()" class="w-full py-3.5 btn-honey font-black rounded-xl text-base flex items-center justify-center gap-2 pulse-btn">
-                <i class="fa-solid fa-play"></i> Volver a Jugar
+            <p id="victoryMessage" class="text-base font-bold text-[#7c6248] mb-6">¡Has contado todas las abejitas de forma fantástica! Te ganaste una súper gota de miel pura.</p>
+            <button onclick="exitToDashboard()" class="w-full py-3.5 btn-honey font-black rounded-xl text-base flex items-center justify-center gap-2">
+                <i class="fa-solid fa-home"></i> Volver al Tablero
             </button>
         </div>
     </div>
 
     <script>
-        // Contexto de audio nativo para reproducir sonidos dulces sin retraso
         let audioCtx = null;
-
-        // Función para narrar cariñosamente al estilo maestra de preescolar
-        function speakTeacher(text) {
-            if ('speechSynthesis' in window) {
-                // Cancelar cualquier narración previa
-                window.speechSynthesis.cancel();
-                
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.lang = 'es-MX'; // Español latino cálido
-                utterance.pitch = 1.35;   // Pitch elevado y juguetón
-                utterance.rate = 0.82;    // Velocidad ideal para asimilación preescolar
-                
-                const voices = window.speechSynthesis.getVoices();
-                const preferredVoice = voices.find(v => 
-                    v.lang.startsWith('es') && 
-                    (v.name.toLowerCase().includes('google') || 
-                     v.name.toLowerCase().includes('sabrina') || 
-                     v.name.toLowerCase().includes('zira') || 
-                     v.name.toLowerCase().includes('female'))
-                );
-                
-                if (preferredVoice) {
-                    utterance.voice = preferredVoice;
-                } else {
-                    const fallbackEs = voices.find(v => v.lang.startsWith('es'));
-                    if (fallbackEs) utterance.voice = fallbackEs;
-                }
-                
-                window.speechSynthesis.speak(utterance);
-            }
-        }
-
-        function playTeacherNarration() {
-            const message = "¡Hola, mi pequeño explorador! Mira cuántas abejitas tan bonitas y alegres están volando alrededor de la flor rosa. ¿Me ayudas a contarlas con tu dedito y a tocar el botón con el número correcto de abajo? ¡Sé que lo vas a hacer espectacular!";
-            speakTeacher(message);
-        }
-
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.onvoiceschanged = () => {};
-        }
-
-        function playSfx(type) {
-            try {
-                if (!audioCtx) {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-
-                const now = audioCtx.currentTime;
-
-                if (type === 'correct') {
-                    // Tono feliz ascendente (Miel de éxito)
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(523.25, now); // C5
-                    osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
-                    osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
-                    osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
-                    gain.gain.setValueAtTime(0.12, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
-                    osc.start();
-                    osc.stop(now + 0.45);
-                } else if (type === 'wrong') {
-                    // Sonido descendente suave
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(220, now); // A3
-                    osc.frequency.exponentialRampToValueAtTime(110, now + 0.25); // A2
-                    gain.gain.setValueAtTime(0.15, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-                    osc.start();
-                    osc.stop(now + 0.3);
-                } else if (type === 'click') {
-                    // Sonido tipo "pop" orgánico
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(350, now);
-                    osc.frequency.exponentialRampToValueAtTime(700, now + 0.08);
-                    gain.gain.setValueAtTime(0.06, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
-                    osc.start();
-                    osc.stop(now + 0.08);
-                } else if (type === 'fanfare') {
-                    // Acorde triunfal para la victoria
-                    osc.type = 'square';
-                    const scale = [523.25, 659.25, 783.99, 1046.50, 1318.51];
-                    scale.forEach((freq, i) => {
-                        osc.frequency.setValueAtTime(freq, now + (i * 0.1));
-                    });
-                    gain.gain.setValueAtTime(0.08, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
-                    osc.start();
-                    osc.stop(now + 0.6);
-                }
-            } catch (e) {
-                console.warn("Audio Context bloqueado o no soportado.");
-            }
-        }
-
         let numerosTarget = 0;
         let currentRound = 1;
         const totalRounds = 3;
 
-        // Frases para motivar en cada acierto
         const positivePhrases = [
             "⭐ ¡Excelente trabajo! ¡Eres increíble!",
             "🍯 ¡Riquísimo! Una gotita de miel extra para ti.",
@@ -235,10 +173,41 @@
             "🌸 ¡Qué gran vista tienes, explorador!"
         ];
 
-        // Iniciar el juego en cuanto cargue el navegador
         window.onload = function() {
             initNumerosGame();
         };
+
+        function playSfx(type) {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
+
+                if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523, now);
+                    osc.frequency.setValueAtTime(659, now + 0.1);
+                    osc.frequency.setValueAtTime(783, now + 0.2);
+                    gain.gain.setValueAtTime(0.08, now);
+                    osc.start(); osc.stop(now + 0.4);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(150, now);
+                    gain.gain.setValueAtTime(0.1, now);
+                    osc.start(); osc.stop(now + 0.25);
+                } else if (type === 'pop') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(350, now);
+                    gain.gain.setValueAtTime(0.05, now);
+                    osc.start(); osc.stop(now + 0.08);
+                }
+            } catch (e) {}
+        }
 
         function initNumerosGame() {
             currentRound = 1;
@@ -248,44 +217,37 @@
         }
 
         function generateNumerosRound() {
-            // Generar un número de abejitas al azar entre 2 y 9
-            numerosTarget = Math.floor(Math.random() * 8) + 2; 
+            numerosTarget = Math.floor(Math.random() * 6) + 2; 
             const beesArea = document.getElementById('beesArea');
             beesArea.innerHTML = '';
 
-            // Dibujar las abejas dinámicamente con posiciones y ritmos aleatorios
             for (let i = 0; i < numerosTarget; i++) {
                 const bee = document.createElement('div');
                 bee.className = 'absolute text-4xl bee-animation select-none';
                 bee.innerHTML = '🐝';
                 
-                // Distribución porcentual en el lienzo de flores
                 const x = Math.floor(Math.random() * 75) + 10;
                 const y = Math.floor(Math.random() * 60) + 15;
                 
                 bee.style.left = `${x}%`;
                 bee.style.top = `${y}%`;
-                
-                // Retraso de animación para que se muevan con ritmos desfasados
                 bee.style.animationDelay = `${(Math.random() * 2).toFixed(1)}s`;
                 beesArea.appendChild(bee);
             }
 
-            // Crear 3 opciones: una correcta y dos incorrectas
             const optionsSet = new Set([numerosTarget]);
             while (optionsSet.size < 3) {
-                const randomVal = Math.floor(Math.random() * 9) + 2;
+                const randomVal = Math.floor(Math.random() * 8) + 2;
                 optionsSet.add(randomVal);
             }
 
-            // Convertir y ordenar opciones para que no sea predecible
             const optionsArray = Array.from(optionsSet).sort((a, b) => a - b);
             const optionsContainer = document.getElementById('numbersOptions');
             optionsContainer.innerHTML = '';
 
             optionsArray.forEach(val => {
                 const btn = document.createElement('button');
-                btn.className = 'py-4 px-2 bg-white hover:bg-amber-50 border-2 border-amber-200 text-[#4a3319] font-black text-3xl rounded-2xl shadow-sm hover:shadow transition-all hover:scale-105 active:scale-95';
+                btn.className = 'py-4 px-2 bg-white hover:bg-amber-50 border-2 border-amber-200 text-[#4a3319] font-black text-3xl rounded-2xl shadow-sm hover:shadow hover:scale-105 active:scale-95 transition-all';
                 btn.innerText = val;
                 btn.onclick = () => checkNumerosAnswer(val, btn);
                 optionsContainer.appendChild(btn);
@@ -295,15 +257,9 @@
         function checkNumerosAnswer(val, btn) {
             if (val === numerosTarget) {
                 playSfx('correct');
-                
-                // Mostrar éxito visualizando el botón verde
-                btn.classList.remove('border-amber-200', 'bg-white', 'hover:bg-amber-50');
-                btn.classList.add('bg-emerald-500', 'border-emerald-600', 'text-white');
-                
-                // Deshabilitar todos los botones temporalmente
+                btn.className = 'py-4 px-2 bg-emerald-500 border-2 border-emerald-600 text-white font-black text-3xl rounded-2xl shadow-md';
                 document.querySelectorAll('#numbersOptions button').forEach(b => b.disabled = true);
 
-                // Cambiar frase motivadora en el pie de página
                 const randomPhrase = positivePhrases[Math.floor(Math.random() * positivePhrases.length)];
                 document.getElementById('motivationalMessage').innerText = randomPhrase;
 
@@ -320,11 +276,7 @@
                 }, 1300);
             } else {
                 playSfx('wrong');
-                // Estilizar error visual
-                btn.classList.remove('bg-white');
-                btn.classList.add('bg-rose-100', 'border-rose-400', 'text-rose-600', 'animate-shake');
-                
-                // Limpiar la animación sacudida para poder repetirla
+                btn.className = 'py-4 px-2 bg-rose-100 border-2 border-rose-300 text-rose-600 font-black text-3xl rounded-2xl animate-shake';
                 setTimeout(() => btn.classList.remove('animate-shake'), 400);
             }
         }
@@ -332,30 +284,14 @@
         function updateNumerosProgress() {
             const bar = document.getElementById('numerosProgress');
             const counter = document.getElementById('roundCounter');
-            
-            // Progreso visual de estrellas
             const displayRound = Math.min(currentRound - 1, totalRounds);
-            const percent = (displayRound / totalRounds) * 100;
-            bar.style.width = `${percent}%`;
+            bar.style.width = `${(displayRound / totalRounds) * 100}%`;
             counter.innerText = `${displayRound}/${totalRounds}`;
         }
 
-        function resetGame() {
-            playSfx('click');
-            // Ocultar modal de victoria
-            const modal = document.getElementById('victoryModal');
-            modal.classList.add('opacity-0');
-            modal.querySelector('div').classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                initNumerosGame();
-            }, 300);
-        }
-
         function triggerVictory() {
-            playSfx('fanfare');
+            playSfx('correct');
             startConfetti();
-
             const modal = document.getElementById('victoryModal');
             modal.classList.remove('hidden');
             setTimeout(() => {
@@ -364,27 +300,23 @@
             }, 10);
         }
 
+        function exitToDashboard() {
+            window.location.href = 'dashboard.html';
+        }
+
         function startConfetti() {
             const container = document.getElementById('confettiContainer');
             container.innerHTML = '';
             container.classList.remove('hidden');
-
-            const colors = ['#ffd54f', '#ffb300', '#ff6b6b', '#4ecdc4', '#a29bfe', '#a8e6cf'];
-            
-            for (let i = 0; i < 45; i++) {
+            const colors = ['#ffd54f', '#ffb300', '#ff6b6b', '#4ecdc4', '#a29bfe'];
+            for (let i = 0; i < 35; i++) {
                 const piece = document.createElement('div');
                 piece.className = 'confetti-piece';
                 piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                
-                // Variar formas y tamaños del confeti
-                piece.style.width = `${Math.floor(Math.random() * 8) + 7}px`;
-                piece.style.height = `${Math.floor(Math.random() * 14) + 10}px`;
+                piece.style.width = `${Math.floor(Math.random() * 8) + 6}px`;
+                piece.style.height = `${Math.floor(Math.random() * 12) + 8}px`;
                 piece.style.left = `${Math.floor(Math.random() * 100)}vw`;
-                
-                // Diferentes velocidades de caída
-                piece.style.animationDuration = `${(Math.random() * 1.8 + 1.5).toFixed(1)}s`;
-                piece.style.animationDelay = `${(Math.random() * 1.2).toFixed(1)}s`;
-                
+                piece.style.animationDuration = `${(Math.random() * 1.5 + 1.5).toFixed(1)}s`;
                 container.appendChild(piece);
             }
         }

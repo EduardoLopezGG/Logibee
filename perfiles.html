@@ -8,423 +8,422 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Importamos la misma tipografía redondeada de la página de registro -->
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Iconos de FontAwesome -->
+    <!-- Tipografía infantil redondeada -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Iconos divertidos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="public/styles_perfil.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        body {
+            background: url('watermarked_img_9780776355970194250.png') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.12);
+            z-index: 0;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 
+                        inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(253, 213, 189, 0.4);
+            z-index: 1;
+        }
+
+        .btn-honey {
+            background: linear-gradient(135deg, #ffca28, #ff9800);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn-honey:hover {
+            background: linear-gradient(135deg, #ffd54f, #fb8c00);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+            transform: scale(1.05);
+        }
+
+        @keyframes floatBee {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(3deg); }
+        }
+
+        .animate-bee {
+            animation: floatBee 3s ease-in-out infinite;
+        }
+
+        .profile-card {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .profile-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 15px 25px rgba(255, 152, 0, 0.15);
+        }
+    </style>
 </head>
-<body>
+<body class="flex items-center justify-center min-h-screen relative">
 
-    <!-- Contenedor Principal (Estilo idéntico a Registro pero extendido) -->
-    <main class="w-full max-w-4xl glass-panel rounded-[24px] p-6 sm:p-10 text-center relative overflow-hidden">
-        
-        <!-- Abejita flotante decorativa que hace juego -->
-        <div class="absolute top-4 left-6 text-yellow-500 text-3xl animate-float-slow opacity-80 hidden md:block">
-            <i class="fa-solid fa-bee"></i>
-        </div>
-
-        <header class="mb-8 relative z-10">
-            <div class="flex items-center justify-center gap-2 mb-3">
-                <span class="bg-amber-100 text-[#4a3319] text-xs font-bold px-3 py-1 rounded-full border border-amber-200 flex items-center gap-1.5">
-                    <i class="fa-solid fa-circle text-xs text-emerald-500 animate-pulse"></i> Sesión iniciada
-                </span>
-            </div>
-            <h1 class="text-xl sm:text-2xl font-bold text-[#4a3319]">
-                ¡Hola <span id="userNameDisplay" class="underline decoration-wavy decoration-yellow-400">Papá/Mamá</span>! 👋
-            </h1>
-            <p class="text-3xl sm:text-4xl font-extrabold text-[#4a3319] mt-3 tracking-tight">
-                ¿Quién va a jugar hoy?
-            </p>
-            <p class="sweet-brown-subtitle text-sm sm:text-base mt-2 font-medium">Elige tu personaje para entrar al panal mágico</p>
+    <main class="w-full max-w-3xl glass-panel rounded-[28px] p-6 sm:p-10 text-center relative">
+        <header class="mb-8">
+            <span class="text-6xl inline-block mb-3 animate-bee">🐝</span>
+            <h1 class="text-3xl sm:text-4xl font-black text-[#4a3319] tracking-wide">El Panal de la Abejita</h1>
+            <p class="text-base sm:text-lg font-bold text-[#7c6248] mt-1">¿Quién va a jugar hoy en la colmena? 🌸</p>
         </header>
 
-        <!-- GRID DE PERFILES DE NIÑOS -->
-        <section class="my-8 relative z-10">
-            <div id="profilesGrid" class="flex flex-wrap justify-center gap-6 sm:gap-8">
-                <!-- Los perfiles se cargarán dinámicamente aquí -->
+        <section class="mb-8">
+            <div id="profilesGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-6 justify-center">
+                <!-- Se cargan dinámicamente -->
             </div>
         </section>
 
-        <footer class="mt-8 pt-6 border-t border-dashed border-[#e6dfd5] flex flex-col sm:flex-row gap-4 justify-between items-center relative z-10">
-            <button onclick="toggleManageMode()" id="btnManage" class="btn-wood flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm shadow-sm">
-                <i class="fa-solid fa-gear" id="gearIcon"></i>
-                <span id="manageText">Administrar Perfiles</span>
+        <footer class="border-t-2 border-dashed border-amber-100 pt-6 flex flex-col sm:flex-row gap-4 items-center justify-between">
+            <button onclick="toggleManageMode()" id="manageBtn" class="px-5 py-2.5 rounded-xl border-2 border-[#e6dfd5] bg-white text-[#7c6248] hover:text-[#4a3319] hover:border-yellow-400 font-bold text-sm transition-all flex items-center gap-2 active:scale-95">
+                <i class="fa-solid fa-user-gear"></i> Modo Administrar
             </button>
 
-            <a href="login.html" class="flex items-center gap-2 text-[#7c6248] hover:text-[#4a3319] font-bold text-sm transition-colors duration-200">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                Cerrar sesión de adultos
-            </a>
+            <button onclick="logoutParent()" class="px-5 py-2.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-sm transition-all flex items-center gap-2 active:scale-95 border border-rose-200">
+                <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión Padre
+            </button>
         </footer>
     </main>
 
-    <div id="addProfileModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
-        <div class="bg-white/95 rounded-[24px] w-full max-w-md p-6 sm:p-8 shadow-2xl border-2 border-yellow-400 transform scale-95 transition-transform duration-300 relative">
-            <button onclick="closeAddModal()" class="absolute top-4 right-4 bg-amber-50 hover:bg-amber-100 text-[#4a3319] w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all border border-[#e6dfd5]">
-                <i class="fa-solid fa-xmark"></i>
+    <!-- MODAL CREAR PERFIL (Añadir) -->
+    <div id="addProfileModal" class="fixed inset-0 bg-black/65 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-[28px] w-full max-w-md p-6 sm:p-8 shadow-2xl border-4 border-amber-300 transform scale-95 transition-transform duration-300 relative">
+            <button onclick="closeAddModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-700 flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark text-lg"></i>
             </button>
 
-            <h3 class="text-2xl font-bold text-[#4a3319] mb-4 text-center flex items-center justify-center gap-2">
-                <i class="fa-solid fa-face-laugh-beam text-yellow-500"></i> Nuevo Jugador
+            <h3 class="text-2xl font-black text-[#4a3319] mb-4 text-center flex items-center justify-center gap-2">
+                👶 Crear Nuevo Personaje
             </h3>
 
-            <form id="newProfileForm" onsubmit="saveNewProfile(event)">
-                <!-- Nombre del niño -->
-                <div class="mb-5 text-left">
-                    <label class="block text-[#4a3319] font-bold mb-2 text-sm">¿Cómo te llamas?</label>
-                    <div class="input-wrapper relative flex items-center">
-                        <input type="text" id="kidName" required maxlength="12" placeholder="Ej: Sofía, Leo..." class="w-full">
-                        <i class="fa-solid fa-user-tag"></i>
+            <form id="addProfileForm" onsubmit="handleCreateProfile(event)" class="space-y-5 text-left">
+                <div>
+                    <label class="block text-sm font-black text-[#4a3319] mb-2">¿Cómo se llama tu abejita? *</label>
+                    <input type="text" id="kidNameInput" required maxlength="20" placeholder="Ej: Juanito" class="w-full p-3.5 border-2 border-[#e6dfd5] focus:border-amber-400 rounded-2xl font-bold outline-none transition-all">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-black text-[#4a3319] mb-2">¿Cuántos años tiene? *</label>
+                    <input type="number" id="kidAge" required min="2" max="12" placeholder="Ej: 5" class="w-full p-3.5 border-2 border-[#e6dfd5] focus:border-amber-400 rounded-2xl font-bold outline-none transition-all">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-black text-[#4a3319] mb-3">Elige tu avatar de la suerte:</label>
+                    <div class="grid grid-cols-4 gap-3" id="avatarsContainer">
+                        <!-- Generado dinámicamente -->
                     </div>
                 </div>
 
-                <!-- Selección de Avatar (Emoji representativo) -->
-                <div class="mb-5 text-left">
-                    <label class="block text-[#4a3319] font-bold mb-2 text-sm">Elige tu animalito favorito:</label>
-                    <div class="grid grid-cols-5 gap-2" id="avatarSelector">
-                        <!-- Generados dinámicamente -->
-                    </div>
-                </div>
-
-                <!-- Selección de Color de Fondo -->
-                <div class="mb-5 text-left">
-                    <label class="block text-[#4a3319] font-bold mb-2 text-sm">Elige tu color favorito:</label>
-                    <div class="flex justify-between gap-2" id="colorSelector">
-                        <!-- Colores -->
-                    </div>
-                </div>
-
-                <!-- Selección de Nivel Inicial -->
-                <div class="mb-6 text-left">
-                    <label class="block text-[#4a3319] font-bold mb-2 text-sm">¿Cuál es tu nivel para los juegos?</label>
-                    <div class="grid grid-cols-3 gap-2" id="levelSelector">
-                        <button type="button" onclick="selectLevel('principiante')" id="btnLevel-principiante" class="level-btn py-3 px-2 text-xs sm:text-sm font-bold rounded-xl border-2 transition-all flex flex-col items-center gap-1.5 bg-amber-50 border-amber-300 text-amber-700 ring-2 ring-yellow-400 scale-105">
-                            <span class="text-xl">🌟</span>
-                            <span>Principiante</span>
-                        </button>
-                        <button type="button" onclick="selectLevel('intermedio')" id="btnLevel-intermedio" class="level-btn py-3 px-2 text-xs sm:text-sm font-bold rounded-xl border-2 border-[#e6dfd5] bg-white text-[#7c6248] transition-all flex flex-col items-center gap-1.5 hover:border-amber-300">
-                            <span class="text-xl">🚀</span>
-                            <span>Intermedio</span>
-                        </button>
-                        <button type="button" onclick="selectLevel('avanzado')" id="btnLevel-avanzado" class="level-btn py-3 px-2 text-xs sm:text-sm font-bold rounded-xl border-2 border-[#e6dfd5] bg-white text-[#7c6248] transition-all flex flex-col items-center gap-1.5 hover:border-amber-300">
-                            <span class="text-xl">👑</span>
-                            <span>Avanzado</span>
-                        </button>
-                    </div>
-                    <input type="hidden" id="kidLevel" value="principiante">
-                </div>
-
-                <button type="submit" class="w-full py-3.5 btn-honey font-bold rounded-xl text-lg flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-circle-check"></i> ¡Listo, a Jugar!
+                <button type="submit" class="w-full py-4 btn-honey font-black rounded-2xl text-base flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> ¡Listo, a Volar!
                 </button>
             </form>
         </div>
     </div>
 
-    <div id="welcomeScreen" class="fixed inset-0 bg-amber-500 z-50 flex flex-col items-center justify-center p-6 text-white hidden">
-        <div class="text-center max-w-md">
-            <div class="text-8xl mb-6 animate-float-slow text-yellow-300 drop-shadow-[0_5px_15px_rgba(0,0,0,0.3)]">
-                <i class="fa-solid fa-bee"></i>
-            </div>
-            <h2 class="text-4xl sm:text-5xl font-black mb-4 drop-shadow-md text-white">
-                ¡Entrando al panal!
-            </h2>
-            <p id="welcomeKidText" class="text-2xl sm:text-3xl font-bold text-yellow-100 bg-amber-600/50 px-6 py-3 rounded-3xl inline-block shadow-inner">
-                ¡Hola Sofía! ✨
-            </p>
-            <div class="mt-8 flex justify-center gap-2">
-                <div class="w-4 h-4 bg-yellow-300 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-                <div class="w-4 h-4 bg-yellow-200 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
-                <div class="w-4 h-4 bg-yellow-100 rounded-full animate-bounce" style="animation-delay: 0.3s"></div>
-            </div>
-            <p class="text-sm text-yellow-200/80 mt-12 font-medium italic">Preparando tus juegos y colmenas de miel...</p>
-        </div>
-    </div>
-
-    <!-- Contenedor de Toasts con estilo miel -->
-    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
-
-    <!-- Modal educativo para evitar errores de navegación en la vista previa del editor -->
-    <div id="sandboxNavigationModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-[24px] w-full max-w-md p-6 sm:p-8 text-center shadow-2xl border-4 border-yellow-400 relative">
-            <div class="text-6xl mb-4">🚀</div>
-            <h3 class="text-2xl font-black text-[#4a3319] mb-3">¡Viaje Mágico Simulado!</h3>
-            <p class="text-sm font-semibold text-[#7c6248] mb-4">
-                El juego está listo para viajar a: <code class="bg-amber-100 px-2 py-1 rounded text-[#4a3319] font-mono break-all" id="sandboxTargetUrl">dashboard.html</code>
-            </p>
-            <div class="bg-amber-50 rounded-xl p-4 text-xs text-left text-[#7c6248] border border-amber-200 mb-6 leading-relaxed">
-                <p class="font-bold mb-1 text-[#4a3319]">💡 ¿Por qué aparece esta ventana?</p>
-                Estás probando la colmena dentro de la vista previa interactiva. Los navegadores de internet no permiten saltar automáticamente entre pestañas de código temporal (<code class="font-mono text-[10px]">blob:</code>) por seguridad.
-                <p class="mt-2 font-bold text-[#4a3319]">✅ ¡Tu código funciona perfectamente!</p>
-                Al descargar los archivos y abrirlos en tu ordenador, la abejita te llevará al panel real de forma directa y automática.
-            </div>
-            <button onclick="closeSandboxModal()" class="w-full py-3 btn-honey font-black rounded-xl text-sm shadow-md">
-                Entendido, seguir probando
-            </button>
-        </div>
-    </div>
-
     <script>
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        const userId = localStorage.getItem('logged_in_user_id') || 'mock-user-123';
-        
-        // Perfiles infantiles por defecto definidos al principio
-        const defaultProfiles = [
-            { id: 1, name: "Sofía 🦄", avatar: "🦄", color: "bg-pink-50 border-pink-200 text-pink-600" },
-            { id: 2, name: "Leo 🦁", avatar: "🦁", color: "bg-amber-50 border-amber-200 text-amber-600" },
-            { id: 3, name: "Dino 🦖", avatar: "🦖", color: "bg-emerald-50 border-emerald-200 text-emerald-600" }
-        ];
-
-        let profiles = JSON.parse(localStorage.getItem('kid_profiles')) || defaultProfiles;
+        // Sistema de audio integrado
+        let audioCtx = null;
         let isManageMode = false;
+        let selectedAvatar = '🐝';
 
-        const availableAvatars = ["🦁", "🦄", "🦖", "🐼", "🦊", "🐯", "🐵", "🐸", "🐝", "🦉"];
-        const availableColors = [
-            { id: 'pink', classes: 'bg-pink-50 border-pink-200 text-pink-600' },
-            { id: 'amber', classes: 'bg-amber-50 border-amber-200 text-amber-600' },
-            { id: 'emerald', classes: 'bg-emerald-50 border-emerald-200 text-emerald-600' },
-            { id: 'purple', classes: 'bg-purple-50 border-purple-200 text-purple-600' },
-            { id: 'sky', classes: 'bg-sky-50 border-sky-200 text-sky-600' }
+        const availableAvatars = [
+            { emoji: '🐝', color: 'bg-amber-100 border-amber-300 text-amber-600' },
+            { emoji: '🐻', color: 'bg-orange-100 border-orange-300 text-orange-700' },
+            { emoji: '🐨', color: 'bg-slate-100 border-slate-300 text-slate-600' },
+            { emoji: '🐯', color: 'bg-yellow-100 border-yellow-300 text-yellow-600' },
+            { emoji: '🐰', color: 'bg-pink-100 border-pink-300 text-pink-600' },
+            { emoji: '🦊', color: 'bg-red-100 border-red-300 text-red-500' },
+            { emoji: '🦁', color: 'bg-amber-200 border-amber-400 text-amber-700' },
+            { emoji: '🐸', color: 'bg-emerald-100 border-emerald-300 text-emerald-600' }
         ];
 
-        let selectedAvatar = "🦁";
-        let selectedColor = availableColors[1].classes;
-        let selectedLevel = "principiante";
-
-        // Cargar perfiles de Postgres desde el backend
-        async function fetchProfilesFromDb() {
-            try {
-                const response = await fetch(`http://localhost:5000/api/users/${userId}/profiles`);
-                if (response.ok) {
-                    const data = await response.json();
-                    profiles = data.map(p => ({
-                        id: p.id,
-                        name: p.nombre,
-                        avatar: p.avatar,
-                        color: availableColors[Math.floor(Math.random() * availableColors.length)].classes, // Color aleatorio visual
-                        level: p.nivelActual === 3 ? 'avanzado' : (p.nivelActual === 2 ? 'intermedio' : 'principiante')
-                    }));
-                }
-            } catch (err) {
-                console.warn("Servidor desconectado, usando mock offline.");
-                // Fallback offline por compatibilidad local
-                profiles = JSON.parse(localStorage.getItem('kid_profiles')) || defaultProfiles;
+        // Verificar sesión del padre o aplicar cuenta de pruebas en desarrollo local
+        let userId = localStorage.getItem('logged_in_user_id');
+        if (!userId) {
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') {
+                userId = 'usuario-prueba-colmena';
+                localStorage.setItem('logged_in_user_id', userId);
+                localStorage.setItem('logged_in_user', 'Padre de Pruebas');
+            } else {
+                window.location.href = 'login.html';
             }
-            renderProfiles();
         }
 
-        // Registrar un nuevo perfil en Postgres mediante la API
-        async function saveNewProfile(event) {
-            event.preventDefault();
-            const nameInput = document.getElementById('kidName');
-            const name = nameInput.value.trim();
-
-            if (!name) return;
-
+        // Sintetizador nativo de efectos de sonido
+        function playSound(type) {
             try {
-                const response = await fetch(`http://localhost:5000/api/users/${userId}/profiles`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        nombre: name,
-                        edad: 6,
-                        avatar: selectedAvatar,
-                        nivelActual: selectedLevel
-                    })
-                });
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
 
-                if (response.ok) {
-                    showToast(`¡Perfil de ${name} creado en Base de Datos!`, 'success');
-                    nameInput.value = '';
-                    closeAddModal();
-                    await fetchProfilesFromDb();
+                if (type === 'hover') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(320, now);
+                    osc.frequency.exponentialRampToValueAtTime(480, now + 0.1);
+                    gain.gain.setValueAtTime(0.02, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+                    osc.start();
+                    osc.stop(now + 0.1);
+                } else if (type === 'select') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, now);
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.2);
+                    gain.gain.setValueAtTime(0.06, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                    osc.start();
+                    osc.stop(now + 0.2);
+                } else if (type === 'pop') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(260, now);
+                    osc.frequency.exponentialRampToValueAtTime(520, now + 0.08);
+                    gain.gain.setValueAtTime(0.05, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+                    osc.start();
+                    osc.stop(now + 0.08);
+                } else if (type === 'delete') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(300, now);
+                    osc.frequency.exponentialRampToValueAtTime(100, now + 0.25);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                    osc.start();
+                    osc.stop(now + 0.25);
+                }
+            } catch (e) {
+                console.warn("AudioContext bloqueado:", e);
+            }
+        }
+
+        window.onload = function() {
+            loadKidProfiles();
+            renderAvatarChoices();
+        };
+
+        // Cargar perfiles de la base de datos (con fallback local)
+        async function loadKidProfiles() {
+            try {
+                const response = await fetch(`/api/users/${userId}/profiles`);
+                const data = await response.json();
+
+                if (data.success) {
+                    renderProfiles(data.profiles);
                 } else {
-                    showToast("No se pudo registrar en la base de datos.", "error");
+                    useOfflineFallback();
                 }
             } catch (error) {
-                console.error(error);
-                // Guardado offline si el backend Express está inactivo
-                const offlineProfile = {
-                    id: Date.now().toString(),
-                    name: name,
-                    avatar: selectedAvatar,
-                    color: selectedColor,
-                    level: selectedLevel
-                };
-                profiles.push(offlineProfile);
-                localStorage.setItem('kid_profiles', JSON.stringify(profiles));
-                showToast(`Perfil offline guardado temporalmente`, 'success');
-                nameInput.value = '';
-                closeAddModal();
-                renderProfiles();
+                console.warn("Backend desconectado. Cargando perfiles locales offline.");
+                useOfflineFallback();
             }
         }
 
-        // Eliminar perfil de la base de datos Postgres
-        async function deleteProfile(id) {
-            playSound('pop');
-            try {
-                const response = await fetch(`http://localhost:5000/api/profiles/${id}`, {
-                    method: 'DELETE'
-                });
-                if (response.ok) {
-                    showToast("Perfil removido correctamente de Postgres.", "success");
-                    await fetchProfilesFromDb();
-                }
-            } catch (err) {
-                profiles = profiles.filter(p => p.id !== id);
-                localStorage.setItem('kid_profiles', JSON.stringify(profiles));
-                showToast("Perfil offline removido.", "success");
-                renderProfiles();
+        function useOfflineFallback() {
+            let localData = JSON.parse(localStorage.getItem(`local_profiles_${userId}`));
+            if (!localData || localData.length === 0) {
+                localData = [
+                    { id: '1', nombre: 'Juanito 🐝', edad: 5, avatar: '🐝' },
+                    { id: '2', nombre: 'Sofía 🐰', edad: 6, avatar: '🐰' }
+                ];
+                localStorage.setItem(`local_profiles_${userId}`, JSON.stringify(localData));
             }
+            renderProfiles(localData);
         }
 
-        // Avisos flotantes elegantes con colores de miel
-        function showToast(message, type = "info") {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `flex items-center gap-3 px-5 py-3 rounded-xl shadow-xl border text-[#4a3319] font-bold transition-all duration-300 transform translate-y-2 opacity-0 ${
-                type === 'success' ? 'bg-emerald-50 border-emerald-300' : 'bg-amber-50 border-amber-200'
-            }`;
-            toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check text-emerald-600' : 'fa-circle-exclamation text-amber-600'} text-lg"></i> <span>${message}</span>`;
-            container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.classList.remove('opacity-0', 'translate-y-2');
-            }, 50);
-
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        // Renderizar perfiles infantiles
-        function renderProfiles() {
+        function renderProfiles(profiles) {
             const grid = document.getElementById('profilesGrid');
             grid.innerHTML = '';
 
             profiles.forEach(profile => {
-                const isJiggling = isManageMode ? 'jiggle' : '';
                 const card = document.createElement('div');
-                card.className = `profile-card relative cursor-pointer text-center group transition-all duration-300 ${isJiggling}`;
+                card.className = "profile-card cursor-pointer bg-white border-2 border-[#e6dfd5] rounded-3xl p-5 flex flex-col items-center justify-between relative min-h-[160px]";
+                card.setAttribute('onmouseenter', 'playSound("hover")');
                 
-                const clickAction = isManageMode 
-                    ? `deleteProfile(${profile.id})` 
-                    : `selectProfile(${profile.id})`;
-
-                card.innerHTML = `
-                    <div onclick="${clickAction}" onmouseenter="playSound('hover')" class="profile-card-inner w-28 h-28 sm:w-32 sm:h-32 rounded-[24px] flex items-center justify-center text-5xl sm:text-6xl shadow-md transition-all duration-300 ${profile.color}">
-                        ${profile.avatar}
-                    </div>
-                    <p class="mt-3 text-lg font-bold text-[#4a3319] group-hover:text-[#ff9800] transition-colors">${profile.name}</p>
-                    
-                    ${isManageMode ? `
-                        <button onclick="deleteProfile(${profile.id}); event.stopPropagation();" class="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg border-2 border-white transition-all transform hover:scale-110 active:scale-95">
+                let deleteBadge = '';
+                if (isManageMode) {
+                    deleteBadge = `
+                        <button onclick="handleDeleteProfile('${profile.id}', event)" class="absolute -top-2.5 -right-2.5 w-8 h-8 rounded-full bg-rose-500 hover:bg-rose-600 text-white flex items-center justify-center shadow-md active:scale-90 transition-all z-20">
                             <i class="fa-solid fa-trash-can text-sm"></i>
                         </button>
-                    ` : ''}
+                    `;
+                }
+
+                const matchedAvatar = availableAvatars.find(a => a.emoji === profile.avatar) || availableAvatars[0];
+
+                card.innerHTML = `
+                    ${deleteBadge}
+                    <div onclick="selectChildProfile('${profile.id}', '${profile.nombre}', '${profile.avatar}', '${matchedAvatar.color}')" class="w-full flex flex-col items-center">
+                        <div class="w-20 h-20 rounded-2xl ${matchedAvatar.color} border-2 flex items-center justify-center text-4xl shadow-sm mb-3">
+                            ${profile.avatar}
+                        </div>
+                        <h4 class="font-black text-base text-[#4a3319] truncate max-w-full">${profile.nombre}</h4>
+                        <span class="text-xs font-bold text-[#7c6248] mt-0.5">${profile.edad} años</span>
+                    </div>
                 `;
+
                 grid.appendChild(card);
             });
 
-            // Botón dinámico para agregar perfil
-            if (!isManageMode) {
-                const addCard = document.createElement('div');
-                addCard.className = `profile-card cursor-pointer text-center group transition-all duration-300`;
-                addCard.onclick = () => openAddModal();
-                addCard.onmouseenter = () => playSound('hover');
-                addCard.innerHTML = `
-                    <div class="profile-card-inner w-28 h-28 sm:w-32 sm:h-32 rounded-[24px] bg-amber-50/50 hover:bg-amber-100 border-dashed border-2 border-amber-300 flex items-center justify-center text-4xl text-[#cca474] shadow-sm">
-                        <i class="fa-solid fa-plus group-hover:rotate-90 transition-transform duration-300"></i>
-                    </div>
-                    <p class="mt-3 text-lg font-bold text-[#7c6248] group-hover:text-[#4a3319] transition-colors">Nuevo Perfil</p>
-                `;
-                grid.appendChild(addCard);
-            }
+            // Tarjeta de añadir perfil
+            const addCard = document.createElement('div');
+            addCard.className = "profile-card cursor-pointer bg-amber-50/50 hover:bg-amber-50 border-2 border-dashed border-amber-300 rounded-3xl p-5 flex flex-col items-center justify-center min-h-[160px]";
+            addCard.setAttribute('onmouseenter', 'playSound("hover")');
+            addCard.onclick = openAddModal;
+
+            addCard.innerHTML = `
+                <div class="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 mb-3 text-2xl border border-amber-200">
+                    <i class="fa-solid fa-plus"></i>
+                </div>
+                <h4 class="font-black text-sm text-[#4a3319]">Añadir Perfil</h4>
+                <span class="text-[10px] font-bold text-[#7c6248] mt-0.5">Crear personaje</span>
+            `;
+
+            grid.appendChild(addCard);
         }
 
-        // Control inteligente de redirecciones para prevenir bloqueos de Blob URI
-        function navigateTo(targetUrl) {
-            try {
-                if (window.location.protocol === 'blob:' || window.location.href.startsWith('blob:')) {
-                    showSandboxModal(targetUrl);
-                } else {
-                    window.location.href = targetUrl;
-                }
-            } catch (e) {
-                console.warn("Navegación capturada por simulador:", e);
-                showSandboxModal(targetUrl);
-            }
-        }
-
-        function showSandboxModal(targetUrl) {
-            const modal = document.getElementById('sandboxNavigationModal');
-            const targetSpan = document.getElementById('sandboxTargetUrl');
-            if (modal && targetSpan) {
-                targetSpan.innerText = targetUrl;
-                modal.classList.remove('hidden');
-            }
-        }
-
-        function closeSandboxModal() {
-            const modal = document.getElementById('sandboxNavigationModal');
-            if (modal) {
-                modal.classList.add('hidden');
-            }
-        }
-
-        function selectProfile(id) {
+        function selectChildProfile(id, name, avatar, color) {
+            if (isManageMode) return;
             playSound('select');
-            
-            // Buscamos el perfil completo utilizando el ID
-            const profile = profiles.find(p => p.id === id);
-            if (!profile) return;
-            
-            // Guardamos el perfil activo en LocalStorage como texto JSON
-            localStorage.setItem('active_kid_profile', JSON.stringify(profile));
-            
-            const welcomeScreen = document.getElementById('welcomeScreen');
-            const welcomeKidText = document.getElementById('welcomeKidText');
-            
-            welcomeKidText.innerText = `¡Hola ${profile.name}! 🎮✨`;
-            welcomeScreen.classList.remove('hidden');
-            
+
+            const activeProfile = { id, name, avatar, color };
+            localStorage.setItem('active_kid_profile', JSON.stringify(activeProfile));
+
             setTimeout(() => {
-                // Usamos navegación segura en vez de cambiar el window.location directamente
-                navigateTo('dashboard.html');
-            }, 3000);
+                window.location.href = 'dashboard.html';
+            }, 300);
         }
 
-        // Modo de administración/edición
-        function toggleManageMode() {
-            playSound('pop');
-            isManageMode = !isManageMode;
-            const btn = document.getElementById('btnManage');
-            const text = document.getElementById('manageText');
-            const gear = document.getElementById('gearIcon');
+        function renderAvatarChoices() {
+            const container = document.getElementById('avatarsContainer');
+            container.innerHTML = '';
 
-            if (isManageMode) {
-                text.innerText = "Listo (Volver)";
-                btn.className = "flex items-center gap-2 px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold text-sm transition-all duration-200 shadow-md border border-emerald-600";
-                gear.className = "fa-solid fa-circle-check animate-pulse";
-                showToast("Toca el icono de basura rojo en el personaje para quitarlo.", "info");
-            } else {
-                text.innerText = "Administrar Perfiles";
-                btn.className = "btn-wood flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm shadow-sm";
-                gear.className = "fa-solid fa-gear";
+            availableAvatars.forEach(avatar => {
+                const btn = document.createElement('button');
+                btn.type = "button";
+                btn.className = `w-12 h-12 rounded-xl flex items-center justify-center text-2xl border-2 transition-all active:scale-90 ${avatar.color}`;
+                btn.innerText = avatar.emoji;
+
+                if (avatar.emoji === selectedAvatar) {
+                    btn.classList.add('ring-4', 'ring-amber-400');
+                }
+
+                btn.onclick = () => {
+                    playSound('pop');
+                    selectedAvatar = avatar.emoji;
+                    renderAvatarChoices();
+                };
+
+                container.appendChild(btn);
+            });
+        }
+
+        async function handleCreateProfile(event) {
+            event.preventDefault();
+            const nombre = document.getElementById('kidNameInput').value;
+            const edad = parseInt(document.getElementById('kidAge').value);
+
+            try {
+                const response = await fetch('/api/profiles', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, nombre, edad, avatar: selectedAvatar })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    onProfileCreationSuccess();
+                } else {
+                    saveProfileOffline(nombre, edad);
+                }
+            } catch (error) {
+                console.warn("No se pudo conectar al servidor. Guardando perfil de forma local.");
+                saveProfileOffline(nombre, edad);
             }
-            renderProfiles();
         }
 
-        function deleteProfile(id) {
-            playSound('pop');
-            profiles = profiles.filter(p => p.id !== id);
-            localStorage.setItem('kid_profiles', JSON.stringify(profiles));
-            showToast("Perfil removido correctamente.", "success");
-            renderProfiles();
+        function saveProfileOffline(nombre, edad) {
+            let localData = JSON.parse(localStorage.getItem(`local_profiles_${userId}`)) || [];
+            const newProfile = {
+                id: Date.now().toString(),
+                nombre,
+                edad,
+                avatar: selectedAvatar
+            };
+            localData.push(newProfile);
+            localStorage.setItem(`local_profiles_${userId}`, JSON.stringify(localData));
+            onProfileCreationSuccess();
+        }
+
+        function onProfileCreationSuccess() {
+            playSound('select');
+            closeAddModal();
+            loadKidProfiles();
+            document.getElementById('addProfileForm').reset();
+            selectedAvatar = '🐝';
+        }
+
+        async function handleDeleteProfile(profileId, event) {
+            event.stopPropagation();
+            
+            if (confirm("¿Estás seguro de que deseas borrar este personaje del panal?")) {
+                try {
+                    const response = await fetch(`/api/profiles/${profileId}`, { method: 'DELETE' });
+                    const data = await response.json();
+
+                    if (data.success) {
+                        playSound('delete');
+                        loadKidProfiles();
+                    } else {
+                        deleteProfileOffline(profileId);
+                    }
+                } catch (error) {
+                    deleteProfileOffline(profileId);
+                }
+            }
+        }
+
+        function deleteProfileOffline(profileId) {
+            let localData = JSON.parse(localStorage.getItem(`local_profiles_${userId}`)) || [];
+            localData = localData.filter(p => p.id !== profileId);
+            localStorage.setItem(`local_profiles_${userId}`, JSON.stringify(localData));
+            playSound('delete');
+            loadKidProfiles();
         }
 
         function openAddModal() {
@@ -435,12 +434,10 @@
                 modal.classList.remove('opacity-0');
                 modal.querySelector('div').classList.remove('scale-95');
             }, 10);
-            
-            selectLevel('principiante');
-            renderSelectors();
         }
 
         function closeAddModal() {
+            playSound('pop');
             const modal = document.getElementById('addProfileModal');
             modal.classList.add('opacity-0');
             modal.querySelector('div').classList.add('scale-95');
@@ -449,88 +446,28 @@
             }, 300);
         }
 
-        // Renderizado del selector de animalitos y color dentro del modal
-        function renderSelectors() {
-            const avSel = document.getElementById('avatarSelector');
-            avSel.innerHTML = '';
-            availableAvatars.forEach(avatar => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = `p-2 text-3xl rounded-xl transition-all hover:bg-amber-100 ${selectedAvatar === avatar ? 'bg-amber-100 border-2 border-yellow-500 scale-110' : ''}`;
-                btn.innerText = avatar;
-                btn.onclick = () => {
-                    playSound('hover');
-                    selectedAvatar = avatar;
-                    renderSelectors();
-                };
-                avSel.appendChild(btn);
-            });
+        function toggleManageMode() {
+            playSound('pop');
+            isManageMode = !isManageMode;
+            const btn = document.getElementById('manageBtn');
 
-            const colSel = document.getElementById('colorSelector');
-            colSel.innerHTML = '';
-            availableColors.forEach(color => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                const baseBgColor = color.classes.split(' ')[0];
-                const baseBorderColor = color.classes.split(' ')[1];
-                btn.className = `w-10 h-10 rounded-full border-2 transition-all hover:scale-110 ${baseBgColor} ${baseBorderColor} ${selectedColor === color.classes ? 'ring-4 ring-yellow-400 scale-110' : ''}`;
-                btn.onclick = () => {
-                    playSound('hover');
-                    selectedColor = color.classes;
-                    renderSelectors();
-                };
-                colSel.appendChild(btn);
-            });
+            if (isManageMode) {
+                btn.className = "px-5 py-2.5 rounded-xl border-2 border-rose-400 bg-rose-50 text-rose-700 font-bold text-sm transition-all flex items-center gap-2 active:scale-95 shadow-sm";
+                btn.innerHTML = `<i class="fa-solid fa-lock"></i> Salir de Ajustes`;
+            } else {
+                btn.className = "px-5 py-2.5 rounded-xl border-2 border-[#e6dfd5] bg-white text-[#7c6248] hover:text-[#4a3319] hover:border-yellow-400 font-bold text-sm transition-all flex items-center gap-2 active:scale-95";
+                btn.innerHTML = `<i class="fa-solid fa-user-gear"></i> Modo Administrar`;
+            }
+
+            loadKidProfiles();
         }
 
-        function saveNewProfile(event) {
-            event.preventDefault();
-            const nameInput = document.getElementById('kidName');
-            const name = nameInput.value.trim();
-
-            if (!name) return;
-
-            const newProfile = {
-                id: Date.now(),
-                name: name,
-                avatar: selectedAvatar,
-                color: selectedColor,
-                level: selectedLevel
-            };
-
-            profiles.push(newProfile);
-            localStorage.setItem('kid_profiles', JSON.stringify(profiles));
-
-            playSound('select');
-            showToast(`¡Perfil de ${name} creado con éxito! Nivel: ${selectedLevel.toUpperCase()}`, 'success');
-            
-            nameInput.value = '';
-            closeAddModal();
-            renderProfiles();
-        }
-
-        function selectLevel(level) {
-            playSound('hover');
-            selectedLevel = level;
-            document.getElementById('kidLevel').value = level;
-            
-            ['principiante', 'intermedio', 'avanzado'].forEach(l => {
-                const btn = document.getElementById(`btnLevel-${l}`);
-                if (btn) {
-                    if (l === level) {
-                        btn.className = "level-btn py-3 px-2 text-xs sm:text-sm font-bold rounded-xl border-2 transition-all flex flex-col items-center gap-1.5 bg-amber-50 border-amber-300 text-amber-700 ring-2 ring-yellow-400 scale-105";
-                    } else {
-                        btn.className = "level-btn py-3 px-2 text-xs sm:text-sm font-bold rounded-xl border-2 border-[#e6dfd5] bg-white text-[#7c6248] transition-all flex flex-col items-center gap-1.5 hover:border-amber-300 hover:scale-100";
-                    }
-                }
-            });
-        }
-
-        window.onload = function() {
-            // Cargar perfiles desde base de datos al iniciar
-            fetchProfilesFromDb();
-            const loggedInUser = localStorage.getItem('logged_in_user') || 'Mamá/Papá';
-            document.getElementById('userNameDisplay').innerText = loggedInUser;
+        function logoutParent() {
+            playSound('pop');
+            localStorage.removeItem('logged_in_user_id');
+            localStorage.removeItem('logged_in_user');
+            localStorage.removeItem('active_kid_profile');
+            window.location.href = 'login.html';
         }
     </script>
 </body>

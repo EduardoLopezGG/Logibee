@@ -1,210 +1,198 @@
 generator client {
-provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-provider = "postgresql"
-url      = env("DATABASE_URL")
+  provider = "postgresql"
 }
 
 model User {
-id              String   @id @default(uuid())
-email           String   @unique
-password        String
-name            String
-tipo            String   @default("padre")
-parentalPinHash String?
-language        String   @default("es")
-createdAt       DateTime @default(now())
-updatedAt       DateTime @updatedAt
+  id              String           @id @default(uuid())
+  email           String           @unique
+  password        String
+  name            String
+  tipo            String           @default("padre")
+  parentalPinHash String?
+  language        String           @default("es")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  profiles        ChildProfile[]
+  parentalConfigs ParentalConfig[]
 
-profiles        ChildProfile[]
-parentalConfigs ParentalConfig[]
-
-@@map("users")
+  @@map("users")
 }
 
 model ChildProfile {
-id               String    @id @default(uuid())
-userId           String
-nombre           String    @db.VarChar(80)
-edad             Int
-avatar           String
-nivelActual      Int       @default(1)
-totalStars       Int       @default(0)
-streakDays       Int       @default(0)
-lastActivityDate DateTime?
-createdAt        DateTime  @default(now())
-updatedAt        DateTime  @updatedAt
+  id                  String               @id @default(uuid())
+  userId              String
+  nombre              String               @db.VarChar(80)
+  edad                Int
+  avatar              String
+  nivelActual         Int                  @default(1)
+  totalStars          Int                  @default(0)
+  streakDays          Int                  @default(0)
+  lastActivityDate    DateTime?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dailyChallenges     DailyChallenge[]
+  parentalConfig      ParentalConfig?
+  profileAchievements ProfileAchievement[]
+  progress            Progress[]
+  sessions            Session[]
 
-user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-parentalConfig      ParentalConfig?
-sessions            Session[]
-progress            Progress[]
-profileAchievements ProfileAchievement[]
-dailyChallenges     DailyChallenge[]
-
-@@unique([userId, nombre])
-@@index([userId])
-@@map("child_profiles")
+  @@unique([userId, nombre])
+  @@index([userId])
+  @@map("child_profiles")
 }
 
 model ParentalConfig {
-id                String   @id @default(uuid())
-userId            String
-profileId         String   @unique
-limiteTiempoMin   Int      @default(30)
-nivelMaxPermitido Int      @default(5)
-sonido            Boolean  @default(true)
-musica            Boolean  @default(true)
-modoNocturno      Boolean  @default(false)
-notificaciones    Boolean  @default(true)
-updatedAt         DateTime @updatedAt
+  id                String       @id @default(uuid())
+  userId            String
+  profileId         String       @unique
+  limiteTiempoMin   Int          @default(30)
+  nivelMaxPermitido Int          @default(5)
+  sonido            Boolean      @default(true)
+  musica            Boolean      @default(true)
+  modoNocturno      Boolean      @default(false)
+  notificaciones    Boolean      @default(true)
+  updatedAt         DateTime     @updatedAt
+  profile           ChildProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-profile ChildProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-
-@@index([profileId])
-@@map("parental_configs")
+  @@index([profileId])
+  @@map("parental_configs")
 }
 
 model Level {
-id          String   @id @default(uuid())
-moduleType  String
-numeroNivel Int
-nombre      String
-descripcion String?
-dificultad  Int
-createdAt   DateTime @default(now())
+  id          String     @id @default(uuid())
+  moduleType  String
+  numeroNivel Int
+  nombre      String
+  descripcion String?
+  dificultad  Int
+  createdAt   DateTime   @default(now())
+  activities  Activity[]
+  progress    Progress[]
+  sessions    Session[]
 
-activities Activity[]
-sessions   Session[]
-progress   Progress[]
-
-@@unique([moduleType, numeroNivel])
-@@map("levels")
+  @@unique([moduleType, numeroNivel])
+  @@map("levels")
 }
 
 model Activity {
-id            String   @id @default(uuid())
-levelId       String
-nombre        String
-tipo          String
-descripcion   String?
-recursoAudio  String?
-recursoVisual String?
-createdAt     DateTime @default(now())
+  id            String     @id @default(uuid())
+  levelId       String
+  nombre        String
+  tipo          String
+  descripcion   String?
+  recursoAudio  String?
+  recursoVisual String?
+  createdAt     DateTime   @default(now())
+  level         Level      @relation(fields: [levelId], references: [id], onDelete: Cascade)
+  progress      Progress[]
 
-level    Level      @relation(fields: [levelId], references: [id], onDelete: Cascade)
-progress Progress[]
-
-@@index([levelId])
-@@map("activities")
+  @@index([levelId])
+  @@map("activities")
 }
 
 model Session {
-id             String    @id @default(uuid())
-profileId      String
-levelId        String
-moduleType     String
-questions      Json
-answers        Json      @default("[]")
-status         String    @default("in_progress")
-correctAnswers Int       @default(0)
-totalQuestions Int       @default(5)
-starsEarned    Int       @default(0)
-fechaInicio    DateTime  @default(now())
-fechaFin       DateTime?
-duracionSeg    Int?
+  id             String       @id @default(uuid())
+  profileId      String
+  levelId        String
+  moduleType     String
+  questions      Json
+  answers        Json         @default("[]")
+  status         String       @default("in_progress")
+  correctAnswers Int          @default(0)
+  totalQuestions Int          @default(5)
+  starsEarned    Int          @default(0)
+  fechaInicio    DateTime     @default(now())
+  fechaFin       DateTime?
+  duracionSeg    Int?
+  progress       Progress[]
+  level          Level        @relation(fields: [levelId], references: [id])
+  profile        ChildProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-profile  ChildProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-level    Level        @relation(fields: [levelId], references: [id])
-progress Progress[]
-
-@@index([profileId])
-@@index([profileId, status])
-@@map("sessions")
+  @@index([profileId])
+  @@index([profileId, status])
+  @@map("sessions")
 }
 
 model Progress {
-id          String   @id @default(uuid())
-profileId   String
-activityId  String?
-levelId     String
-sessionId   String?
-moduleType  String
-intentos    Int      @default(0)
-aciertos    Int      @default(0)
-completada  Boolean  @default(false)
-starsEarned Int      @default(0)
-fecha       DateTime @default(now())
+  id          String       @id @default(uuid())
+  profileId   String
+  activityId  String?
+  levelId     String
+  sessionId   String?
+  moduleType  String
+  intentos    Int          @default(0)
+  aciertos    Int          @default(0)
+  completada  Boolean      @default(false)
+  starsEarned Int          @default(0)
+  fecha       DateTime     @default(now())
+  activity    Activity?    @relation(fields: [activityId], references: [id])
+  level       Level        @relation(fields: [levelId], references: [id])
+  profile     ChildProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  session     Session?     @relation(fields: [sessionId], references: [id])
 
-profile  ChildProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-activity Activity?    @relation(fields: [activityId], references: [id])
-level    Level        @relation(fields: [levelId], references: [id])
-session  Session?     @relation(fields: [sessionId], references: [id], onDelete: SetNull)
-
-@@index([profileId, levelId])
-@@index([profileId, moduleType])
-@@map("progress")
+  @@index([profileId, levelId])
+  @@index([profileId, moduleType])
+  @@map("progress")
 }
 
 model Achievement {
-id               String   @id @default(uuid())
-nombre           String
-descripcion      String
-tipo             String
-icono            String
-puntosRequeridos Int
-criteriaType     String
-criteriaValue    Int
-criteriaModule   String?
-createdAt        DateTime @default(now())
+  id                  String               @id @default(uuid())
+  nombre              String
+  descripcion         String
+  tipo                String
+  icono               String
+  puntosRequeridos    Int
+  criteriaType        String
+  criteriaValue       Int
+  criteriaModule      String?
+  createdAt           DateTime             @default(now())
+  profileAchievements ProfileAchievement[]
 
-profileAchievements ProfileAchievement[]
-
-@@map("achievements")
+  @@map("achievements")
 }
 
 model ProfileAchievement {
-id             String   @id @default(uuid())
-profileId      String
-achievementId  String
-fechaObtencion DateTime @default(now())
+  id             String       @id @default(uuid())
+  profileId      String
+  achievementId  String
+  fechaObtencion DateTime     @default(now())
+  achievement    Achievement  @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  profile        ChildProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-profile     ChildProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
-achievement Achievement  @relation(fields: [achievementId], references: [id], onDelete: Cascade)
-
-@@unique([profileId, achievementId])
-@@map("profile_achievements")
+  @@unique([profileId, achievementId])
+  @@map("profile_achievements")
 }
 
 model DailyChallenge {
-id            String   @id @default(uuid())
-profileId     String
-date          String
-rewardType    String   @default("stars")
-rewardValue   Int      @default(5)
-allCompleted  Boolean  @default(false)
-rewardClaimed Boolean  @default(false)
-createdAt     DateTime @default(now())
+  id            String               @id @default(uuid())
+  profileId     String
+  date          String
+  rewardType    String               @default("stars")
+  rewardValue   Int                  @default(5)
+  allCompleted  Boolean              @default(false)
+  rewardClaimed Boolean              @default(false)
+  createdAt     DateTime             @default(now())
+  tasks         DailyChallengeTask[]
+  profile       ChildProfile         @relation(fields: [profileId], references: [id], onDelete: Cascade)
 
-profile ChildProfile         @relation(fields: [profileId], references: [id], onDelete: Cascade)
-tasks   DailyChallengeTask[]
-
-@@unique([profileId, date])
-@@map("daily_challenges")
+  @@unique([profileId, date])
+  @@map("daily_challenges")
 }
 
 model DailyChallengeTask {
-id          String  @id @default(uuid())
-challengeId String
-description String
-moduleType  String
-completed   Boolean @default(false)
+  id          String         @id @default(uuid())
+  challengeId String
+  description String
+  moduleType  String
+  completed   Boolean        @default(false)
+  challenge   DailyChallenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
 
-challenge DailyChallenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
-
-@@index([challengeId])
-@@map("daily_challenge_tasks")
+  @@index([challengeId])
+  @@map("daily_challenge_tasks")
 }

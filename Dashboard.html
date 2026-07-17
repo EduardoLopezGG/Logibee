@@ -12,50 +12,100 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;900&display=swap" rel="stylesheet">
     <!-- Iconos divertidos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="public/styles_dashboard.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        body {
+            background: url('watermarked_img_9780776355970194250.png') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.93);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 
+                        inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(253, 213, 189, 0.4);
+        }
+
+        .btn-honey {
+            background: linear-gradient(135deg, #ffca28, #ff9800);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn-honey:hover {
+            background: linear-gradient(135deg, #ffd54f, #fb8c00);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+            transform: scale(1.05);
+        }
+
+        @keyframes hoverBee {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(3deg); }
+        }
+
+        .animate-bee {
+            animation: hoverBee 3s ease-in-out infinite;
+        }
+
+        .map-path {
+            stroke-dasharray: 8, 8;
+            animation: dash 30s linear infinite;
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: -1000; }
+        }
+    </style>
 </head>
 <body class="flex flex-col items-center justify-start p-4 sm:p-6 min-h-screen">
 
-    <!-- BARRA DE NAVEGACIÓN SUPERIOR (Escritorio) -->
+    <!-- NAV ESCRITORIO -->
     <nav class="hidden md:flex w-full max-w-4xl glass-panel rounded-2xl p-3 justify-between items-center mb-6 z-40 sticky top-4">
         <div class="flex items-center gap-3">
             <span class="text-3xl animate-bee">🐝</span>
             <span class="font-black text-xl text-[#4a3319]">Mi Colmena Mágica</span>
         </div>
-        <div id="desktopNavMenu" class="flex items-center gap-2">
-            <!-- Los botones se generan dinámicamente con JS -->
-        </div>
+        <div id="desktopNavMenu" class="flex items-center gap-2"></div>
         <button onclick="logoutProfile()" class="px-4 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-xs transition-all flex items-center gap-1.5 active:scale-95 border border-rose-200">
-            <a href="login.html"><i class="fa-solid fa-person-running"></i> Salir del Panal</a>
+            <i class="fa-solid fa-person-running"></i> Salir del Panal
         </button>
     </nav>
 
-    <!-- CONTENEDOR PRINCIPAL DEL JUEGO -->
+    <!-- PANEL PRINCIPAL -->
     <main class="w-full max-w-4xl glass-panel rounded-[28px] p-6 sm:p-8 min-h-[520px] flex flex-col justify-between relative overflow-hidden">
         
-        <!-- VISTA 1: DASHBOARD -->
+        <!-- DASHBOARD -->
         <div id="view-dashboard" class="view-content flex flex-col">
-            <!-- Perfil del niño arriba -->
             <header class="flex items-center justify-between border-b-2 border-dashed border-amber-100 pb-4 mb-6">
                 <div class="flex items-center gap-4">
-                    <div id="kidAvatar" class="w-16 h-16 rounded-2xl flex items-center justify-center text-4xl shadow-md border-3 border-white">
-                        🐝
-                    </div>
+                    <div id="kidAvatar" class="w-16 h-16 rounded-2xl flex items-center justify-center text-4xl shadow-md border-3 border-white">🐝</div>
                     <div class="text-left">
                         <p class="text-xs font-bold text-[#7c6248]">¡Bienvenido de vuelta!</p>
                         <h2 id="kidName" class="text-2xl font-black text-[#4a3319]">¡Súper Explorador!</h2>
                     </div>
                 </div>
-                <!-- Mini Stats infantiles -->
                 <div class="flex items-center gap-2 bg-amber-50 px-4 py-2 rounded-2xl border border-amber-100">
                     <span class="text-xl">🍯</span>
                     <span id="honeyCounter" class="font-black text-[#4a3319] text-sm">30 Gotitas</span>
                 </div>
             </header>
 
-            <!-- Banner rotativo de frases motivadoras -->
             <div class="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-100 rounded-3xl p-5 mb-6 text-center relative shadow-inner">
-                <p id="motivationalMessage" class="text-base sm:text-lg font-black text-[#4a3319] transition-all duration-300 min-h-[48px] flex items-center justify-center">
+                <p id="motivationalMessage" class="text-base sm:text-lg font-black text-[#4a3319] min-h-[48px] flex items-center justify-center">
                     ✨ ¡Eres increíble tal y como eres! ✨
                 </p>
                 <div class="flex justify-center gap-4 mt-3">
@@ -68,223 +118,120 @@
                 </div>
             </div>
 
-            <!-- Gran letrero Tú Puedes -->
             <div class="text-center my-4">
-                <h1 class="text-4xl sm:text-5xl font-black text-amber-500 tracking-wider animate-bee drop-shadow-[0_4px_6px_rgba(0,0,0,0.1)]">
-                    ¡TÚ PUEDES! 💪🍯
-                </h1>
+                <h1 class="text-4xl sm:text-5xl font-black text-amber-500 tracking-wider animate-bee drop-shadow-[0_4px_6px_rgba(0,0,0,0.1)]">¡TÚ PUEDES! 💪🍯</h1>
                 <p class="text-xs text-[#7c6248] font-bold mt-1">Completa las misiones para llenar tu frasco de miel</p>
             </div>
 
-            <!-- Tarjetas de Juegos -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
-                <!-- Juego 1 -->
+                <!-- Tarjetas de Juegos -->
+                 <a href="games/juego_numeros.html">
                 <div onclick="goToGame('numeros')" class="cursor-pointer group bg-white border-2 border-amber-100 hover:border-amber-400 p-5 rounded-[24px] text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                     <span class="text-5xl block mb-3 group-hover:scale-110 transition-transform">🔢</span>
-                    <a href="games/juego_numeros.html" class="text-decoration-none">
-                        <h3 class="font-black text-lg text-[#4a3319]">Números Mágicos</h3>
-                        <p class="text-xs text-[#7c6248] font-bold mt-1">¡Cuenta las abejitas voladoras!</p>
-                    </a>
+                    <h3 class="font-black text-lg text-[#4a3319]">Números Mágicos</h3>
+                    <p class="text-xs text-[#7c6248] font-bold mt-1">¡Cuenta las abejitas voladoras!</p>
                 </div>
-                <!-- Juego 2 -->
+                </a>
+                <a href="games/juego_letras.html">
                 <div onclick="goToGame('letras')" class="cursor-pointer group bg-white border-2 border-amber-100 hover:border-amber-400 p-5 rounded-[24px] text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                     <span class="text-5xl block mb-3 group-hover:scale-110 transition-transform">🔤</span>
-                    <a href="games/juego_letras.html" class="text-decoration-none">
-                        <h3 class="font-black text-lg text-[#4a3319]">Colmena de Letras</h3>
-                    
+                    <h3 class="font-black text-lg text-[#4a3319]">Colmena de Letras</h3>
                     <p class="text-xs text-[#7c6248] font-bold mt-1">¡Completa la palabra misteriosa!</p>
-                    </a>
                 </div>
-                <!-- Juego 3 -->
-                <div onclick="goToGame('pintar')" class="cursor-pointer group bg-white border-2 border-amber-100 hover:border-amber-400 p-5 rounded-[24px] text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                </a>
+                <a href="games/juego_pintar.html">
+                <div onclick="goToGame('paint')" class="cursor-pointer group bg-white border-2 border-amber-100 hover:border-amber-400 p-5 rounded-[24px] text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                     <span class="text-5xl block mb-3 group-hover:scale-110 transition-transform">🎨</span>
-                    <a href="games/juego_pintar.html" class="text-decoration-none">
-                        <h3 class="font-black text-lg text-[#4a3319]">Pintando Panales</h3>
-                        <p class="text-xs text-[#7c6248] font-bold mt-1">¡Dale color a la linda colmena!</p>
-                    </a>
-                    
+                    <h3 class="font-black text-lg text-[#4a3319]">Pintando Panales</h3>
+                    <p class="text-xs text-[#7c6248] font-bold mt-1">¡Dale color a la linda colmena!</p>
                 </div>
+                </a>
             </div>
         </div>
 
-        <!-- VISTA 2: MAPA DE ESTUDIO -->
+        <!-- SECCIÓN: MAPA -->
         <div id="view-mapa" class="view-content hidden flex-col items-center">
-            <h2 class="text-2xl font-black text-[#4a3319] mb-2 flex items-center gap-2">
-                🌸 Camino de la Miel
-            </h2>
+            <h2 class="text-2xl font-black text-[#4a3319] mb-2">🌸 Camino de la Miel</h2>
             <p class="text-sm text-[#7c6248] font-bold mb-6">Completa cada parada para desbloquear nuevas aventuras</p>
-            
-            <!-- Lienzo del Camino Sinuoso -->
-            <div class="w-full max-w-lg bg-gradient-to-b from-[#fdfbf7] to-[#f5f9f0] border-2 border-amber-100 rounded-3xl p-4 shadow-inner relative flex justify-center overflow-x-hidden overflow-y-auto max-h-[360px]">
+            <div class="w-full max-w-lg bg-gradient-to-b from-[#fdfbf7] to-[#f5f9f0] border-2 border-amber-100 rounded-3xl p-4 shadow-inner relative flex justify-center overflow-hidden">
                 <svg viewBox="0 0 200 400" class="w-full max-w-[280px]">
-                    <!-- Línea del camino -->
                     <path d="M 100 370 C 180 300, 20 250, 100 180 C 180 110, 20 80, 100 30" fill="none" stroke="#ffb300" stroke-width="6" stroke-linecap="round" class="map-path" />
-                    
-                    <!-- Paradas del camino (Nodos interactivos) -->
-                    <!-- Inicio -->
                     <g onclick="triggerMapNode(1)" class="cursor-pointer group">
                         <circle cx="100" cy="370" r="16" class="fill-amber-400 stroke-white stroke-2 group-hover:scale-110 transition-transform" />
                         <text x="100" y="375" text-anchor="middle" font-weight="900" font-size="12" fill="white">1</text>
                         <text x="100" y="392" text-anchor="middle" font-weight="900" font-size="8" fill="#4a3319">Inicio 🐝</text>
                     </g>
-                    <!-- Parada 2 -->
                     <g onclick="triggerMapNode(2)" class="cursor-pointer group">
                         <circle cx="130" cy="280" r="16" class="fill-amber-400 stroke-white stroke-2 group-hover:scale-110 transition-transform" />
                         <text x="130" y="285" text-anchor="middle" font-weight="900" font-size="12" fill="white">2</text>
                         <text x="130" y="302" text-anchor="middle" font-weight="900" font-size="8" fill="#4a3319">Pradera 🌸</text>
                     </g>
-                    <!-- Parada 3 (Bloqueada) -->
                     <g onclick="triggerMapNode(3)" class="cursor-pointer group">
                         <circle cx="60" cy="180" r="16" class="fill-slate-200 stroke-white stroke-2 group-hover:scale-110 transition-transform" />
                         <text x="60" y="184" text-anchor="middle" font-weight="900" font-size="12" fill="white">🔒</text>
-                        <text x="60" y="202" text-anchor="middle" font-weight="900" font-size="8" fill="#7c6248">Gran Bosque</text>
-                    </g>
-                    <!-- Parada Final (Bloqueada) -->
-                    <g onclick="triggerMapNode(4)" class="cursor-pointer group">
-                        <circle cx="100" cy="50" r="18" class="fill-slate-200 stroke-white stroke-2 group-hover:scale-110 transition-transform" />
-                        <text x="100" y="54" text-anchor="middle" font-weight="900" font-size="12" fill="white">🔒</text>
-                        <text x="100" y="74" text-anchor="middle" font-weight="900" font-size="8" fill="#7c6248">Castillo de la Reina</text>
                     </g>
                 </svg>
             </div>
         </div>
 
-        <!-- VISTA 3: LOGROS Y PREMIOS -->
+        <!-- SECCIÓN: LOGROS -->
         <div id="view-logros" class="view-content hidden flex-col items-center">
-            <h2 class="text-2xl font-black text-[#4a3319] mb-2 flex items-center gap-2">
-                🏆 Tus Medallas de Oro
-            </h2>
-            <p class="text-sm text-[#7c6248] font-bold mb-6">¡Mira todos los trofeos que has conseguido jugando!</p>
-            
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-2xl">
-                <!-- Logro 1 -->
-                <div class="bg-amber-50/50 border-2 border-amber-200 rounded-3xl p-4 text-center flex flex-col items-center shadow-sm">
-                    <span class="text-4xl mb-2">🥇</span>
+            <h2 class="text-2xl font-black text-[#4a3319] mb-2">🏆 Tus Medallas de Oro</h2>
+            <p class="text-sm text-[#7c6248] font-bold mb-6">¡Mira todos los trofeos que has conseguido!</p>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
+                <div class="bg-amber-50/50 border-2 border-amber-200 rounded-3xl p-4 text-center flex flex-col items-center">
+                    <span class="text-4xl">🥇</span>
                     <h4 class="font-black text-sm text-[#4a3319]">Primer Vuelo</h4>
-                    <p class="text-[10px] text-[#7c6248] font-bold mt-1">¡Registraste tu personaje!</p>
                     <span class="mt-2 px-2.5 py-0.5 bg-emerald-100 text-emerald-700 font-extrabold text-[9px] rounded-full uppercase">Completado</span>
-                </div>
-                <!-- Logro 2 -->
-                <div class="bg-amber-50/50 border-2 border-amber-200 rounded-3xl p-4 text-center flex flex-col items-center shadow-sm">
-                    <span class="text-4xl mb-2">🎨</span>
-                    <h4 class="font-black text-sm text-[#4a3319]">Pintor Real</h4>
-                    <p class="text-[10px] text-[#7c6248] font-bold mt-1">Pintaste tu primer dibujo</p>
-                    <span class="mt-2 px-2.5 py-0.5 bg-emerald-100 text-emerald-700 font-extrabold text-[9px] rounded-full uppercase">Completado</span>
-                </div>
-                <!-- Logro 3 -->
-                <div class="bg-slate-50 border-2 border-slate-200 rounded-3xl p-4 text-center flex flex-col items-center opacity-60">
-                    <span class="text-4xl mb-2 filter grayscale">🔢</span>
-                    <h4 class="font-black text-sm text-[#7c6248]">Gran Contador</h4>
-                    <p class="text-[10px] text-[#7c6248] font-bold mt-1">Acierta 5 veces seguidas</p>
-                    <span class="mt-2 px-2.5 py-0.5 bg-slate-200 text-slate-500 font-extrabold text-[9px] rounded-full uppercase">Bloqueado</span>
-                </div>
-                <!-- Logro 4 -->
-                <div class="bg-slate-50 border-2 border-slate-200 rounded-3xl p-4 text-center flex flex-col items-center opacity-60">
-                    <span class="text-4xl mb-2 filter grayscale">👑</span>
-                    <h4 class="font-black text-sm text-[#7c6248]">Sabio del Bosque</h4>
-                    <p class="text-[10px] text-[#7c6248] font-bold mt-1">Completa todos los juegos</p>
-                    <span class="mt-2 px-2.5 py-0.5 bg-slate-200 text-slate-500 font-extrabold text-[9px] rounded-full uppercase">Bloqueado</span>
                 </div>
             </div>
         </div>
 
-        <!-- VISTA 4: CONFIGURACIONES (CONTROL PARENTAL) -->
+        <!-- SECCIÓN: AJUSTES (CONTROL PARENTAL) -->
         <div id="view-configuraciones" class="view-content hidden flex-col items-center">
-            
-            <!-- Puerta de acceso de Adultos -->
-            <div id="parentalGate" class="w-full max-w-sm bg-white border-2 border-yellow-300 rounded-[24px] p-6 text-center shadow-md relative">
+            <div id="parentalGate" class="w-full max-w-sm bg-white border-2 border-yellow-300 rounded-[24px] p-6 text-center shadow-md">
                 <span class="text-5xl block mb-2">🔐</span>
                 <h3 class="text-lg font-black text-[#4a3319] mb-1">Zona de Padres</h3>
-                <p class="text-xs text-[#7c6248] font-bold mb-4">Para continuar, resuelve esta operación matemática simple:</p>
-                
-                <div class="bg-amber-50 py-3 px-4 rounded-xl font-black text-2xl text-[#4a3319] inline-block border border-amber-200 mb-4" id="mathQuestion">
-                    <!-- Se genera dinámicamente -->
-                </div>
-                
-                <input type="number" id="parentalAnswer" class="w-full p-3 border-2 border-[#e6dfd5] rounded-xl text-center font-bold text-lg mb-4 outline-none focus:border-yellow-400" placeholder="Escribe tu respuesta aquí">
-                
-                <button onclick="checkParentalGate()" class="w-full py-3 btn-honey font-bold rounded-xl text-sm shadow">
-                    Entrar a Configuraciones
-                </button>
+                <p class="text-xs text-[#7c6248] font-bold mb-4">Resuelve la multiplicación para continuar:</p>
+                <div class="bg-amber-50 py-3 px-4 rounded-xl font-black text-2xl text-[#4a3319] inline-block border border-amber-200 mb-4" id="mathQuestion"></div>
+                <input type="number" id="parentalAnswer" class="w-full p-3 border-2 border-[#e6dfd5] rounded-xl text-center font-bold text-lg mb-4 outline-none focus:border-yellow-400">
+                <button onclick="checkParentalGate()" class="w-full py-3 btn-honey font-bold rounded-xl text-sm">Entrar a Configuraciones</button>
             </div>
 
-            <!-- Panel de opciones reales (oculto por defecto) -->
-            <div id="settingsPanel" class="hidden w-full max-w-md bg-white border-2 border-amber-100 rounded-[24px] p-6 text-left shadow-md">
-                <div class="flex items-center gap-3 border-b-2 border-dashed border-amber-100 pb-3 mb-4">
-                    <span class="text-3xl">⚙️</span>
-                    <h3 class="text-lg font-black text-[#4a3319]">Ajustes de la Aplicación</h3>
-                </div>
-
-                <!-- Control de Sonido -->
+            <div id="settingsPanel" class="hidden w-full max-w-md bg-white border-2 border-amber-100 rounded-[24px] p-6">
+                <h3 class="text-lg font-black text-[#4a3319] border-b pb-3 mb-4">⚙️ Ajustes del Sistema</h3>
                 <div class="flex items-center justify-between mb-4">
                     <div>
-                        <h4 class="font-bold text-sm text-[#4a3319]">Efectos de Sonido</h4>
-                        <p class="text-[10px] text-[#7c6248] font-bold">Activa o desactiva la melodía del juego.</p>
+                        <h4 class="font-bold text-sm">Efectos de Sonido</h4>
+                        <p class="text-[10px] text-[#7c6248] font-bold">Activa/desactiva la música del panal</p>
                     </div>
-                    <button id="toggleSoundBtn" onclick="toggleSound()" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs rounded-xl transition-colors">
-                        Sonidos: SÍ
-                    </button>
-                </div>
-
-                <!-- Borrar Progreso -->
-                <div class="flex items-center justify-between border-t border-dashed border-[#e6dfd5] pt-4">
-                    <div>
-                        <h4 class="font-bold text-sm text-[#4a3319]">Reiniciar Aventuras</h4>
-                        <p class="text-[10px] text-[#7c6248] font-bold">Borra las estrellas y gotitas acumuladas.</p>
-                    </div>
-                    <button onclick="resetKidProgress()" class="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs rounded-xl transition-colors">
-                        Reiniciar
-                    </button>
+                    <button id="toggleSoundBtn" onclick="toggleSound()" class="px-4 py-2 bg-emerald-500 text-white font-bold text-xs rounded-xl">Sonidos: SÍ</button>
                 </div>
             </div>
         </div>
 
     </main>
 
-    <!-- BARRA DE NAVEGACIÓN INFERIOR (Móvil) -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t-2 border-amber-100 shadow-[0_-5px_15px_rgba(0,0,0,0.05)] p-2 z-50 flex justify-around items-center rounded-t-3xl">
-        <!-- Los botones se clonan automáticamente con JS para un diseño limpio -->
-    </nav>
+    <!-- NAV MÓVIL -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t-2 border-amber-100 shadow-md p-2 z-50 flex justify-around items-center rounded-t-3xl"></nav>
 
-    <!-- Modal de redirección adaptado para el Dashboard en modo sandbox -->
-    <div id="sandboxNavigationModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-[24px] w-full max-w-md p-6 sm:p-8 text-center shadow-2xl border-4 border-yellow-400 relative">
-            <div class="text-6xl mb-4">🐝</div>
-            <h3 class="text-2xl font-black text-[#4a3319] mb-3">¡Cargando Aventura!</h3>
-            <p class="text-sm font-semibold text-[#7c6248] mb-4">
-                El dashboard intentó abrir: <code class="bg-amber-100 px-2 py-1 rounded text-[#4a3319] font-mono break-all" id="sandboxTargetUrl">juegos.html</code>
-            </p>
-            <div class="bg-amber-50 rounded-xl p-4 text-xs text-left text-[#7c6248] border border-amber-200 mb-6 leading-relaxed">
-                <p class="font-bold mb-1 text-[#4a3319]">💡 ¿Por qué aparece esta ventana?</p>
-                Las restricciones de seguridad de los navegadores impiden redirigir de forma automática entre pestañas temporales generadas dinámicamente (<code class="font-mono text-[10px]">blob:</code>).
-                <p class="mt-2 font-bold text-[#4a3319]">✅ ¡Todo está configurado!</p>
-                Si abres el proyecto descargado en tu equipo local, el juego se iniciará de forma automática de inmediato.
-            </div>
-            <button onclick="closeSandboxModal()" class="w-full py-3 btn-honey font-black rounded-xl text-sm shadow-md">
-                Seguir explorando la colmena
-            </button>
-        </div>
-    </div>
-
-    <!-- Contenedor para notificaciones flotantes -->
+    <!-- TOAST NOTIFICATIONS -->
     <div id="toastContainer" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
     <script>
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         let enableSound = true;
+        let mathSecretResult = 0;
+        let currentPhraseIndex = 0;
 
-        // Frases motivacionales para el carrusel
         const phrases = [
             "✨ ¡Eres increíble tal y como eres! ✨",
             "🍯 ¡Tu mente es brillante como el sol de primavera!",
             "🐝 ¡Las abejitas del panal creen en ti siempre!",
             "🌸 ¡Con paciencia y alegría todo se puede!",
-            "💖 ¡Eres todo un campeón y una campeona!",
-            "🚀 ¡Sigue volando alto, pequeño explorador!"
+            "💖 ¡Eres todo un campeón de la colmena!"
         ];
-        let currentPhraseIndex = 0;
 
-        // Datos del Navbar Dinámico / Recursivo
         const navItems = [
             { id: 'dashboard', label: 'Tablero', icon: 'fa-home', color: 'hover:text-amber-500' },
             { id: 'mapa', label: 'Mapa', icon: 'fa-map-location-dot', color: 'hover:text-emerald-500' },
@@ -292,144 +239,53 @@
             { id: 'configuraciones', label: 'Ajustes', icon: 'fa-gear', color: 'hover:text-[#4a3319]' }
         ];
 
-        let mathSecretResult = 0;
-
-        // Reproducir sonidos limpios con Web Audio API
-        function playSfx(type) {
-            if (!enableSound) return;
-            try {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-
-                if (type === 'select') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(450, audioCtx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(900, audioCtx.currentTime + 0.15);
-                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.15);
-                } else if (type === 'pop') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.08);
-                    gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.08);
-                } else if (type === 'correct') {
-                    const now = audioCtx.currentTime;
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(523.25, now);
-                    osc.frequency.setValueAtTime(659.25, now + 0.1);
-                    osc.frequency.setValueAtTime(783.99, now + 0.2);
-                    gain.gain.setValueAtTime(0.1, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-                    osc.start();
-                    osc.stop(now + 0.4);
-                } else if (type === 'wrong') {
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(180, audioCtx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(90, audioCtx.currentTime + 0.3);
-                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.3);
-                }
-            } catch (e) {
-                console.log("Audio desactivado por políticas del navegador.");
-            }
-        }
-
         window.onload = function() {
             loadProfileData();
             buildNavBars();
             switchView('dashboard');
-            generateParentalMath();
         };
 
-        // Cargar el perfil dinámico desde localStorage
         function loadProfileData() {
             const profile = JSON.parse(localStorage.getItem('active_kid_profile')) || { name: "Explorador", avatar: "🐝", color: "bg-amber-100" };
             document.getElementById('kidName').innerText = `¡Hola, ${profile.name}!`;
             document.getElementById('kidAvatar').innerText = profile.avatar;
-            
-            // Aplicar colores del avatar
-            const avatarBox = document.getElementById('kidAvatar');
-            avatarBox.className = `w-16 h-16 rounded-2xl flex items-center justify-center text-4xl shadow-md border-3 border-white ${profile.color}`;
+            document.getElementById('kidAvatar').className = `w-16 h-16 rounded-2xl flex items-center justify-center text-4xl shadow-md border-3 border-white ${profile.color}`;
         }
 
-        // Crear dinámicamente los Navbars para escritorio y móvil (Recursivo / adaptable)
         function buildNavBars() {
             const desktopMenu = document.getElementById('desktopNavMenu');
             const mobileMenu = document.querySelector('nav.md\\:hidden');
-            
             desktopMenu.innerHTML = '';
             mobileMenu.innerHTML = '';
 
             navItems.forEach(item => {
-                // Crear botón de escritorio
                 const btnDesktop = document.createElement('button');
-                btnDesktop.className = `px-4 py-2 rounded-xl text-[#7c6248] font-bold text-sm transition-all flex items-center gap-2 ${item.color} hover:bg-amber-50 active:scale-95 nav-btn-${item.id}`;
+                btnDesktop.className = `px-4 py-2 rounded-xl text-[#7c6248] font-bold text-sm flex items-center gap-2 ${item.color} hover:bg-amber-50 active:scale-95 nav-btn-${item.id}`;
                 btnDesktop.innerHTML = `<i class="fa-solid ${item.icon}"></i> ${item.label}`;
                 btnDesktop.onclick = () => { playSfx('pop'); switchView(item.id); };
                 desktopMenu.appendChild(btnDesktop);
 
-                // Crear botón de móvil (Barra de iconos inferior)
                 const btnMobile = document.createElement('button');
                 btnMobile.className = `flex flex-col items-center p-1.5 text-xs font-black text-[#7c6248] ${item.color} active:scale-95 nav-btn-${item.id}`;
-                btnMobile.innerHTML = `
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center text-xl hover:bg-amber-50 mb-0.5">
-                        <i class="fa-solid ${item.icon}"></i>
-                    </div>
-                    <span>${item.label}</span>
-                `;
+                btnMobile.innerHTML = `<div class="w-10 h-10 rounded-full flex items-center justify-center text-xl hover:bg-amber-50 mb-0.5"><i class="fa-solid ${item.icon}"></i></div><span>${item.label}</span>`;
                 btnMobile.onclick = () => { playSfx('pop'); switchView(item.id); };
                 mobileMenu.appendChild(btnMobile);
             });
         }
 
         function switchView(viewId) {
-            // Ocultar todas las vistas
-            document.querySelectorAll('.view-content').forEach(view => {
-                view.classList.add('hidden');
-            });
-
-            // Mostrar vista seleccionada
+            document.querySelectorAll('.view-content').forEach(v => v.classList.add('hidden'));
             document.getElementById(`view-${viewId}`).classList.remove('hidden');
 
-            // Actualizar estilo activo en los botones de navegación
-            document.querySelectorAll('[class*="nav-btn-"]').forEach(btn => {
-                btn.classList.remove('bg-amber-100', 'text-[#4a3319]', 'scale-105');
-            });
+            document.querySelectorAll('[class*="nav-btn-"]').forEach(b => b.classList.remove('bg-amber-100', 'text-[#4a3319]'));
+            document.querySelectorAll(`.nav-btn-${viewId}`).forEach(b => b.classList.add('bg-amber-100', 'text-[#4a3319]'));
 
-            // Activar botón en escritorio y móvil
-            document.querySelectorAll(`.nav-btn-${viewId}`).forEach(btn => {
-                btn.classList.add('bg-amber-100', 'text-[#4a3319]', 'scale-105');
-            });
-
-            // Si entra a Ajustes, regenerar pregunta y ocultar panel de adultos
             if (viewId === 'configuraciones') {
                 document.getElementById('parentalGate').classList.remove('hidden');
                 document.getElementById('settingsPanel').classList.add('hidden');
                 document.getElementById('parentalAnswer').value = '';
                 generateParentalMath();
             }
-        }
-
-        // Carrusel de Frases Motivacionales
-        function prevMessage() {
-            playSfx('pop');
-            currentPhraseIndex = (currentPhraseIndex - 1 + phrases.length) % phrases.length;
-            document.getElementById('motivationalMessage').innerText = phrases[currentPhraseIndex];
-        }
-
-        function nextMessage() {
-            playSfx('pop');
-            currentPhraseIndex = (currentPhraseIndex + 1) % phrases.length;
-            document.getElementById('motivationalMessage').innerText = phrases[currentPhraseIndex];
         }
 
         function generateParentalMath() {
@@ -440,107 +296,84 @@
         }
 
         function checkParentalGate() {
-            const input = document.getElementById('parentalAnswer');
-            const val = parseInt(input.value);
-
+            const val = parseInt(document.getElementById('parentalAnswer').value);
             if (val === mathSecretResult) {
                 playSfx('correct');
                 document.getElementById('parentalGate').classList.add('hidden');
                 document.getElementById('settingsPanel').classList.remove('hidden');
             } else {
                 playSfx('wrong');
-                input.value = '';
-                showToast("Oops, esa no es la respuesta correcta.", "error");
+                document.getElementById('parentalAnswer').value = '';
+                showToast("Oops, intenta de nuevo.", "error");
                 generateParentalMath();
             }
         }
 
-        function showToast(message, type = "info") {
+        function showToast(msg, type = "info") {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
-            toast.className = `p-4 rounded-xl shadow-lg border-2 flex items-center gap-2 font-bold transition-all text-sm ${
-                type === 'error' ? 'bg-rose-50 border-rose-300 text-rose-800' : 'bg-emerald-50 border-emerald-300 text-emerald-800'
-            }`;
-            toast.innerHTML = `<span class="text-xl">${type === 'error' ? '⚠️' : '🐝'}</span> <span>${message}</span>`;
+            toast.className = `p-4 rounded-xl shadow-lg border-2 flex items-center gap-2 font-bold transition-all text-sm ${type === 'error' ? 'bg-rose-50 border-rose-300 text-rose-800' : 'bg-emerald-50 border-emerald-300 text-emerald-800'}`;
+            toast.innerHTML = `<span class="text-xl">${type === 'error' ? '⚠️' : '🐝'}</span> <span>${msg}</span>`;
             container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3500);
+            setTimeout(() => toast.remove(), 3000);
         }
 
-        // Configuración de Sonido
+        function playSfx(type) {
+            if (!enableSound) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
+
+                if (type === 'pop') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(300, now);
+                    osc.frequency.exponentialRampToValueAtTime(600, now + 0.08);
+                    gain.gain.setValueAtTime(0.04, now);
+                    osc.start(); osc.stop(now + 0.08);
+                } else if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523, now);
+                    osc.frequency.setValueAtTime(659, now + 0.1);
+                    osc.frequency.setValueAtTime(783, now + 0.2);
+                    gain.gain.setValueAtTime(0.08, now);
+                    osc.start(); osc.stop(now + 0.4);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(150, now);
+                    gain.gain.setValueAtTime(0.08, now);
+                    osc.start(); osc.stop(now + 0.25);
+                }
+            } catch(e) {}
+        }
+
         function toggleSound() {
             enableSound = !enableSound;
-            const btn = document.getElementById('toggleSoundBtn');
-            if (enableSound) {
-                btn.innerText = "Sonidos: SÍ";
-                btn.className = "px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs rounded-xl transition-colors";
-                playSfx('correct');
-            } else {
-                btn.innerText = "Sonidos: NO";
-                btn.className = "px-4 py-2 bg-slate-500 hover:bg-slate-600 text-white font-bold text-xs rounded-xl transition-colors";
-            }
+            document.getElementById('toggleSoundBtn').innerText = enableSound ? "Sonidos: SÍ" : "Sonidos: NO";
+            document.getElementById('toggleSoundBtn').className = enableSound ? "px-4 py-2 bg-emerald-500 text-white font-bold text-xs rounded-xl" : "px-4 py-2 bg-slate-500 text-white font-bold text-xs rounded-xl";
         }
 
-        // Reiniciar Progreso del Niño
-        function resetKidProgress() {
-            playSfx('correct');
-            showToast("¡Misiones reiniciadas correctamente!", "success");
-            setTimeout(() => {
-                switchView('dashboard');
-            }, 1000);
+        function prevMessage() {
+            currentPhraseIndex = (currentPhraseIndex - 1 + phrases.length) % phrases.length;
+            document.getElementById('motivationalMessage').innerText = phrases[currentPhraseIndex];
         }
 
-        // Tocar parada del mapa de estudio
-        function triggerMapNode(nodeNum) {
-            if (nodeNum <= 2) {
-                playSfx('correct');
-                showToast(`¡Has entrado a la Parada ${nodeNum}! Completa las misiones para ganar miel.`, "success");
-            } else {
-                playSfx('wrong');
-                showToast("Esta parada está bloqueada por ahora. ¡Completa las misiones anteriores!", "error");
-            }
-        }
-
-        // Salida de sesión
-        function logoutProfile() {
-            playSfx('pop');
-            navigateTo('perfiles.html');
-        }
-
-        // Sistema de navegación inteligente para prevenir excepciones de Sandbox (Blob URLs)
-        function navigateTo(targetUrl) {
-            try {
-                if (window.location.protocol === 'blob:' || window.location.href.startsWith('blob:')) {
-                    showSandboxModal(targetUrl);
-                } else {
-                    window.location.href = targetUrl;
-                }
-            } catch (e) {
-                console.warn("Navegación capturada por simulador:", e);
-                showSandboxModal(targetUrl);
-            }
-        }
-
-        function showSandboxModal(targetUrl) {
-            const modal = document.getElementById('sandboxNavigationModal');
-            const targetSpan = document.getElementById('sandboxTargetUrl');
-            if (modal && targetSpan) {
-                targetSpan.innerText = targetUrl;
-                modal.classList.remove('hidden');
-            }
-        }
-
-        function closeSandboxModal() {
-            const modal = document.getElementById('sandboxNavigationModal');
-            if (modal) {
-                modal.classList.add('hidden');
-            }
+        function nextMessage() {
+            currentPhraseIndex = (currentPhraseIndex + 1) % phrases.length;
+            document.getElementById('motivationalMessage').innerText = phrases[currentPhraseIndex];
         }
 
         function goToGame(gameType) {
-            playSfx('select');
+            playSfx('correct');
             setTimeout(() => {
-                navigateTo(`juego_${gameType}.html`);
+                window.location.href = `juego_${gameType}.html`;
             }, 300);
+        }
+
+        function logoutProfile() {
+            window.location.href = 'perfiles.html';
         }
     </script>
 </body>
